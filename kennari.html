@@ -33,7 +33,7 @@
   <main class="app-main" id="yfirlit">
     <div class="app-top">
       <div>
-        <div class="muted">Píanó fyrir byrjendur</div>
+        <div class="muted">Píanó · 3 námskeið</div>
         <h1>Sæll, <span id="hello">Stefán</span></h1>
       </div>
       <span class="demo-note">Sýnishorn með tilbúnum gögnum</span>
@@ -62,7 +62,7 @@
     </section>
 
     <section class="panel" id="lotur">
-      <div class="panel-head"><h2>Lotur námskeiðsins</h2><button class="btn btn-outline btn-sm" id="new-lesson">+ Ný lota</button></div>
+      <div class="panel-head"><h2>Námskeið og lotur</h2><button class="btn btn-outline btn-sm" id="new-lesson">+ Ný lota</button></div>
       <div id="lessons" class="lesson-admin"></div>
     </section>
   </main>
@@ -110,9 +110,9 @@
   });
 
   const queue = [
-    { name: 'Bjarki Jónsson',     lota: 'Lota 2: Fimm fingra staða',   sent: 'í gær kl. 19:40',  len: '1:12', note: 'Fyrsta upptakan mín! Fjórði fingurinn er svolítið veikur.' },
-    { name: 'Sara Helgadóttir',   lota: 'Lota 5: Fyrsta lagið',        sent: 'í gær kl. 21:05',  len: '2:40', note: '' },
-    { name: 'Anna Sigurðardóttir',lota: 'Lota 3: Báðar hendur saman',  sent: 'í dag kl. 08:15', len: '1:58', note: 'Vinstri höndin fer alltaf á undan. Hvernig laga ég það?' },
+    { name: 'Bjarki Jónsson',     lota: 'Grunnnámskeið · Lota 2: Fimm fingra staða',   sent: 'í gær kl. 19:40',  len: '1:12', note: 'Fyrsta upptakan mín! Fjórði fingurinn er svolítið veikur.' },
+    { name: 'Sara Helgadóttir',   lota: 'Námskeið 2 · Lota 1: Fyrsta lagið',        sent: 'í gær kl. 21:05',  len: '2:40', note: '' },
+    { name: 'Anna Sigurðardóttir',lota: 'Grunnnámskeið · Lota 3: Báðar hendur saman',  sent: 'í dag kl. 08:15', len: '1:58', note: 'Vinstri höndin fer alltaf á undan. Hvernig laga ég það?' },
   ];
 
   const students = [
@@ -125,16 +125,23 @@
     { name: 'Ólafur Einarsson',    lota: 2, last: 9 },
   ];
 
+  const COURSES = ['Grunnnámskeið', 'Námskeið 2', 'Námskeið 3'];
   const lessons = [
-    { n: 1, title: 'Að kynnast hljómborðinu', status: 'Birt', free: true },
-    { n: 2, title: 'Fimm fingra staða',       status: 'Birt' },
-    { n: 3, title: 'Báðar hendur saman',      status: 'Birt' },
-    { n: 4, title: 'Nótnalestur',             status: 'Birt' },
-    { n: 5, title: 'Fyrsta lagið',            status: 'Birt' },
-    { n: 6, title: 'Grunnhljómar',            status: 'Birt' },
-    { n: 7, title: 'Undirleikur',             status: 'Drög' },
-    { n: 8, title: 'Lokaverkefni',            status: 'Drög' },
+    { c: 0, n: 1, title: 'Að kynnast hljómborðinu', status: 'Birt', free: true },
+    { c: 0, n: 2, title: 'Fimm fingra staða',       status: 'Birt' },
+    { c: 0, n: 3, title: 'Báðar hendur saman',      status: 'Birt' },
+    { c: 0, n: 4, title: 'Nótnalestur',             status: 'Birt' },
+    { c: 1, n: 1, title: 'Fyrsta lagið',            status: 'Birt' },
+    { c: 1, n: 2, title: 'Grunnhljómar',            status: 'Birt' },
+    { c: 1, n: 3, title: 'Undirleikur',             status: 'Birt' },
+    { c: 1, n: 4, title: 'Lag með undirleik',       status: 'Drög' },
+    { c: 2, n: 1, title: 'Tónstigar og fingrasetning', status: 'Drög' },
+    { c: 2, n: 2, title: 'Fleiri hljómar',          status: 'Drög' },
+    { c: 2, n: 3, title: 'Hrynur í vinstri hendi',  status: 'Drög' },
+    { c: 2, n: 4, title: 'Lokaverkefni',            status: 'Drög' },
   ];
+  // Staða nemanda: heildarlota 1–12 → námskeið og lota innan þess
+  const where = n => ({ c: Math.floor((n - 1) / 4), l: ((n - 1) % 4) + 1 });
 
   const esc = s => { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
   const initials = n => n.split(' ').map(w => w[0]).slice(0, 2).join('');
@@ -171,7 +178,7 @@
       const nudge = s.last >= 5;
       return `<tr>
         <th scope="row"><span class="cell-name"><span class="avatar initials sm">${esc(initials(s.name))}</span>${esc(s.name)}</span></th>
-        <td><div class="cell-prog"><div class="progress"><span style="width:${s.lota / 8 * 100}%"></span></div><span class="muted">Lota ${s.lota} af 8</span></div></td>
+        <td><div class="cell-prog"><div class="progress"><span style="width:${where(s.lota).l / 4 * 100}%"></span></div><span class="muted">${COURSES[where(s.lota).c]} · Lota ${where(s.lota).l} af 4</span></div></td>
         <td>${lastText(s.last)}</td>
         <td>${nudge ? '<span class="status warn">Þarf hvatningu</span>' : '<span class="status ok">Á góðri leið</span>'}</td>
         <td><button class="link-btn" data-msg="${esc(s.name)}">${nudge ? 'Senda hvatningu' : 'Skilaboð'}</button></td>
@@ -184,13 +191,17 @@
   }
 
   function renderLessons() {
-    document.getElementById('lessons').innerHTML = lessons.map(l => `
-      <div class="lesson-row">
-        <span class="n">${l.n}</span>
-        <div><strong>${esc(l.title)}</strong>${l.free ? '<span class="free-tag">Ókeypis prufa</span>' : ''}
-          <div class="muted" style="font-size:14px">Myndband · Nótur · Æfingaplan</div></div>
-        <span class="status ${l.status === 'Birt' ? 'ok' : 'draft'}">${l.status}</span>
-        <button class="link-btn" data-edit="${l.n}">Breyta</button>
+    document.getElementById('lessons').innerHTML = COURSES.map((name, ci) => `
+      <div class="lesson-group">
+        <div class="lesson-group-head"><strong>${name}</strong><span class="muted">4 vikur · 4 lotur</span></div>
+        ${lessons.filter(l => l.c === ci).map(l => `
+        <div class="lesson-row">
+          <span class="n">${l.n}</span>
+          <div><strong>${esc(l.title)}</strong>${l.free ? '<span class="free-tag">Ókeypis prufa</span>' : ''}
+            <div class="muted" style="font-size:14px">Vika ${l.n} · Myndband · Nótur · Æfingaplan</div></div>
+          <span class="status ${l.status === 'Birt' ? 'ok' : 'draft'}">${l.status}</span>
+          <button class="link-btn" data-edit="${name}, lota ${l.n}">Breyta</button>
+        </div>`).join('')}
       </div>`).join('');
   }
 
@@ -215,7 +226,7 @@
     const m = e.target.closest('[data-msg]');
     if (m) { toast(`Skilaboð til ${m.dataset.msg} (sýnishorn)`); return; }
     const ed = e.target.closest('[data-edit]');
-    if (ed) { toast(`Hér myndi opnast ritill fyrir Lotu ${ed.dataset.edit}`); return; }
+    if (ed) { toast(`Hér myndi opnast ritill fyrir ${ed.dataset.edit}`); return; }
   });
   document.getElementById('new-lesson').addEventListener('click', () => toast('Hér myndi opnast ritill fyrir nýja lotu'));
 
@@ -225,7 +236,7 @@
       const nextOpened = document.getElementById('r-next').checked;
       if (nextOpened) {
         const s = students.find(s => s.name === q.name);
-        if (s && s.lota < 8) s.lota++;
+        if (s && s.lota < 12) s.lota++;
       }
       renderQueue(); renderStudents();
       toast(`Endurgjöf send til ${q.name}${nextOpened ? ' og næsta lota opnuð' : ''}`);

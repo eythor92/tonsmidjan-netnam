@@ -326,3 +326,13 @@ dialog::backdrop { background: rgba(15,26,28,.5); }
 .lesson-row:first-child { border-top: 0; }
 .lesson-row .n { font: 800 22px/1 var(--display); color: var(--accent); }
 .r-note { background: var(--soft); padding: 12px 14px; border-radius: 10px; font-size: 15px; }
+
+/* Námskeið með lotum */
+.course-blocks { display: flex; flex-direction: column; gap: 48px; }
+.course-block-head { margin-bottom: 16px; display: flex; flex-direction: column; gap: 4px; }
+.course-num { font-size: 13px; font-weight: 700; letter-spacing: .06em; color: var(--accent); text-transform: uppercase; }
+.course-block-head h3 { font-size: 26px; }
+.lesson-group { padding: 8px 0 16px; }
+.lesson-group + .lesson-group { border-top: 2px solid var(--line); padding-top: 20px; }
+.lesson-group-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 4px; font-family: var(--display); font-size: 18px; }
+.lesson-group-head .muted { font-family: var(--body); font-size: 14px; }
