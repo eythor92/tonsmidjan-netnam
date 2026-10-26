@@ -10,3 +10,7 @@ Drög að vefsíðu fyrir netnám Tónsmiðju Suðurlands: kennsla á myndbandi,
 - `verd.html` – verð og spurningar
 - `nemandi.html` – svæði nemanda (sýnishorn)
 - `skilabod.html` – samtal við kennara (sýnishorn)
+- `innskraning.html` – innskráning (sýnishorn: Stefán / 123)
+- `kennari.html` – kennarasvæði (sýnishorn)
+
+> Innskráningin er eingöngu til sýnis og veitir enga raunverulega vörn.

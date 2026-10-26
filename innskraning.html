@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Innskráning | Netnám Tónsmiðju Suðurlands</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+<main class="login-wrap">
+  <a class="brand" href="index.html" style="justify-content:center">
+    <img class="brand-logo" src="logo.png" alt="Tónsmiðja Suðurlands" onerror="this.onerror=null;this.src='https://tonsmidjan.net/wp-content/uploads/2024/04/Tonsmidja-FullLogo_Transparent.png'">
+    <span class="brand-tag">NETNÁM</span>
+  </a>
+
+  <form class="login-card" id="login" novalidate>
+    <h1>Innskráning</h1>
+    <p class="muted" style="font-size:15px">Skráðu þig inn til að halda áfram í netnáminu.</p>
+    <label>Notandanafn
+      <input type="text" id="user" autocomplete="username" required>
+    </label>
+    <label>Lykilorð
+      <input type="password" id="pass" autocomplete="current-password" required>
+    </label>
+    <p class="login-error" id="err" role="alert" hidden>Rangt notandanafn eða lykilorð.</p>
+    <button class="btn btn-primary" type="submit" style="width:100%">Skrá inn</button>
+    <a href="#" class="login-small">Gleymt lykilorð?</a>
+  </form>
+
+  <p class="login-small" style="text-align:center">Ertu nemandi? <a href="nemandi.html">Skoða svæði nemanda (sýnishorn)</a></p>
+</main>
+
+<script>
+  // ATH: Sýnishorn eingöngu. Þessi innskráning keyrir í vafranum og veitir
+  // ENGA raunverulega vörn. Í alvöru kerfi fer innskráning fram á netþjóni.
+  const DEMO = { user: 'stefán', pass: '123', name: 'Stefán' };
+  const form = document.getElementById('login');
+  const err = document.getElementById('err');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const u = document.getElementById('user').value.trim().toLowerCase();
+    const p = document.getElementById('pass').value;
+    if ((u === DEMO.user || u === 'stefan') && p === DEMO.pass) {
+      try { sessionStorage.setItem('tsn-kennari', DEMO.name); } catch {}
+      location.href = 'kennari.html';
+    } else {
+      err.hidden = false;
+      document.getElementById('pass').value = '';
+      document.getElementById('pass').focus();
+    }
+  });
+</script>
+</body>
+</html>

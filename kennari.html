@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kennarasvæði | Netnám Tónsmiðju Suðurlands</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Sýnishorn: sendir á innskráningu ef ekki er búið að skrá inn
+    try { if (!sessionStorage.getItem('tsn-kennari')) location.replace('innskraning.html'); } catch {}
+  </script>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <a class="brand brand-boxed" href="index.html">
+      <img class="brand-logo" src="logo.png" alt="Tónsmiðja Suðurlands" onerror="this.onerror=null;this.src='https://tonsmidjan.net/wp-content/uploads/2024/04/Tonsmidja-FullLogo_Transparent.png'">
+      <span class="brand-tag">KENNARI</span>
+    </a>
+    <nav class="side-nav" aria-label="Valmynd kennara">
+      <a class="active" href="#yfirlit">Yfirlit</a>
+      <a href="#yfirferd">Til yfirferðar <span class="badge" id="nav-count">0</span></a>
+      <a href="#nemendur">Nemendur</a>
+      <a href="#lotur">Lotur</a>
+      <a href="skilabod.html">Skilaboð</a>
+    </nav>
+    <div class="sidebar-foot"><span id="who">Stefán</span> · Píanó<br><button class="link-btn" id="logout" style="color:#B7C4C1;font-weight:500">Útskrá</button></div>
+  </aside>
+
+  <main class="app-main" id="yfirlit">
+    <div class="app-top">
+      <div>
+        <div class="muted">Píanó fyrir byrjendur</div>
+        <h1>Sæll, <span id="hello">Stefán</span></h1>
+      </div>
+      <span class="demo-note">Sýnishorn með tilbúnum gögnum</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><small>Bíða endurgjafar</small><strong id="s-queue">0</strong></div>
+      <div class="stat"><small>Virkir nemendur</small><strong id="s-students">0</strong></div>
+      <div class="stat"><small>Æfðu síðustu 3 daga</small><strong id="s-active">0</strong></div>
+      <div class="stat"><small>Þurfa hvatningu</small><strong id="s-nudge">0</strong></div>
+    </div>
+
+    <section class="panel" id="yfirferd">
+      <div class="panel-head"><h2>Upptökur til yfirferðar</h2><span class="muted" style="font-size:14px">Elstu fyrst</span></div>
+      <div id="queue" class="queue"></div>
+    </section>
+
+    <section class="panel" id="nemendur">
+      <div class="panel-head"><h2>Nemendur</h2><span class="muted" style="font-size:14px" id="student-count"></span></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th scope="col">Nemandi</th><th scope="col">Framvinda</th><th scope="col">Æfði síðast</th><th scope="col">Staða</th><th scope="col"><span class="sr-only">Aðgerðir</span></th></tr></thead>
+          <tbody id="students"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="lotur">
+      <div class="panel-head"><h2>Lotur námskeiðsins</h2><button class="btn btn-outline btn-sm" id="new-lesson">+ Ný lota</button></div>
+      <div id="lessons" class="lesson-admin"></div>
+    </section>
+  </main>
+</div>
+
+<!-- Yfirferð á upptöku -->
+<dialog id="review">
+  <form method="dialog" class="dialog-inner" id="review-form">
+    <div>
+      <div class="eyebrow" id="r-lota"></div>
+      <h2 style="font-size:22px" id="r-name"></h2>
+    </div>
+    <div class="video-frame" style="aspect-ratio:16/9;border-radius:12px">
+      <span class="label" id="r-len"></span>
+      <button type="button" class="play" aria-label="Spila upptöku" style="width:56px;height:56px"><svg width="22" height="22" viewBox="0 0 24 24" fill="#0F1A1C" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+    </div>
+    <p class="r-note" id="r-note"></p>
+    <label>Endurgjöf
+      <textarea id="r-reply" rows="4" placeholder="Hvað gekk vel og hvað á nemandinn að æfa næst?"></textarea>
+    </label>
+    <div class="chips">
+      <button type="button" class="chip" data-snippet="Flottur taktur! ">+ Flottur taktur</button>
+      <button type="button" class="chip" data-snippet="Prófaðu að spila þetta hægar með taktmæli. ">+ Hægar með taktmæli</button>
+      <button type="button" class="chip" data-snippet="Þú ert tilbúin(n) í næstu lotu! ">+ Tilbúin(n) í næstu lotu</button>
+    </div>
+    <label class="check"><input type="checkbox" id="r-video"><span>Láta myndsvar fylgja (tekið upp á eftir)</span></label>
+    <label class="check"><input type="checkbox" id="r-next"><span>Opna næstu lotu fyrir nemandann</span></label>
+    <div class="dialog-actions">
+      <button class="btn btn-outline btn-sm" value="cancel" formnovalidate>Hætta við</button>
+      <button class="btn btn-primary btn-sm" value="send">Senda endurgjöf</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  // ATH: Sýnishorn. Gögnin eru tilbúin og ekkert er vistað á netþjóni.
+  const who = (() => { try { return sessionStorage.getItem('tsn-kennari') || 'Stefán'; } catch { return 'Stefán'; } })();
+  document.getElementById('who').textContent = who;
+  document.getElementById('hello').textContent = who;
+  document.getElementById('logout').addEventListener('click', () => {
+    try { sessionStorage.removeItem('tsn-kennari'); } catch {}
+    location.href = 'innskraning.html';
+  });
+
+  const queue = [
+    { name: 'Bjarki Jónsson',     lota: 'Lota 2: Fimm fingra staða',   sent: 'í gær kl. 19:40',  len: '1:12', note: 'Fyrsta upptakan mín! Fjórði fingurinn er svolítið veikur.' },
+    { name: 'Sara Helgadóttir',   lota: 'Lota 5: Fyrsta lagið',        sent: 'í gær kl. 21:05',  len: '2:40', note: '' },
+    { name: 'Anna Sigurðardóttir',lota: 'Lota 3: Báðar hendur saman',  sent: 'í dag kl. 08:15', len: '1:58', note: 'Vinstri höndin fer alltaf á undan. Hvernig laga ég það?' },
+  ];
+
+  const students = [
+    { name: 'Anna Sigurðardóttir', lota: 3, last: 0 },
+    { name: 'Bjarki Jónsson',      lota: 2, last: 1 },
+    { name: 'Sara Helgadóttir',    lota: 5, last: 1 },
+    { name: 'Guðrún Ólafsdóttir',  lota: 4, last: 2 },
+    { name: 'Hilmar Pétursson',    lota: 1, last: 6 },
+    { name: 'Katla Björnsdóttir',  lota: 7, last: 0 },
+    { name: 'Ólafur Einarsson',    lota: 2, last: 9 },
+  ];
+
+  const lessons = [
+    { n: 1, title: 'Að kynnast hljómborðinu', status: 'Birt', free: true },
+    { n: 2, title: 'Fimm fingra staða',       status: 'Birt' },
+    { n: 3, title: 'Báðar hendur saman',      status: 'Birt' },
+    { n: 4, title: 'Nótnalestur',             status: 'Birt' },
+    { n: 5, title: 'Fyrsta lagið',            status: 'Birt' },
+    { n: 6, title: 'Grunnhljómar',            status: 'Birt' },
+    { n: 7, title: 'Undirleikur',             status: 'Drög' },
+    { n: 8, title: 'Lokaverkefni',            status: 'Drög' },
+  ];
+
+  const esc = s => { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
+  const initials = n => n.split(' ').map(w => w[0]).slice(0, 2).join('');
+  const lastText = d => d === 0 ? 'Í dag' : d === 1 ? 'Í gær' : `Fyrir ${d} dögum`;
+
+  function toast(text) {
+    const t = document.getElementById('toast');
+    t.textContent = text; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  function renderQueue() {
+    const el = document.getElementById('queue');
+    if (!queue.length) {
+      el.innerHTML = '<div class="empty"><strong>Allt búið!</strong><p class="muted">Engar upptökur bíða endurgjafar.</p></div>';
+    } else {
+      el.innerHTML = queue.map((q, i) => `
+        <div class="queue-row">
+          <span class="avatar initials">${esc(initials(q.name))}</span>
+          <div class="queue-main">
+            <strong>${esc(q.name)}</strong>
+            <span class="muted">${esc(q.lota)} · ${esc(q.len)} · ${esc(q.sent)}</span>
+            ${q.note ? `<span class="queue-note">„${esc(q.note)}“</span>` : ''}
+          </div>
+          <button class="btn btn-primary btn-sm" data-review="${i}">Fara yfir</button>
+        </div>`).join('');
+    }
+    document.getElementById('nav-count').textContent = queue.length;
+    document.getElementById('s-queue').textContent = queue.length;
+  }
+
+  function renderStudents() {
+    document.getElementById('students').innerHTML = students.map(s => {
+      const nudge = s.last >= 5;
+      return `<tr>
+        <th scope="row"><span class="cell-name"><span class="avatar initials sm">${esc(initials(s.name))}</span>${esc(s.name)}</span></th>
+        <td><div class="cell-prog"><div class="progress"><span style="width:${s.lota / 8 * 100}%"></span></div><span class="muted">Lota ${s.lota} af 8</span></div></td>
+        <td>${lastText(s.last)}</td>
+        <td>${nudge ? '<span class="status warn">Þarf hvatningu</span>' : '<span class="status ok">Á góðri leið</span>'}</td>
+        <td><button class="link-btn" data-msg="${esc(s.name)}">${nudge ? 'Senda hvatningu' : 'Skilaboð'}</button></td>
+      </tr>`;
+    }).join('');
+    document.getElementById('student-count').textContent = `${students.length} nemendur`;
+    document.getElementById('s-students').textContent = students.length;
+    document.getElementById('s-active').textContent = students.filter(s => s.last <= 3).length;
+    document.getElementById('s-nudge').textContent = students.filter(s => s.last >= 5).length;
+  }
+
+  function renderLessons() {
+    document.getElementById('lessons').innerHTML = lessons.map(l => `
+      <div class="lesson-row">
+        <span class="n">${l.n}</span>
+        <div><strong>${esc(l.title)}</strong>${l.free ? '<span class="free-tag">Ókeypis prufa</span>' : ''}
+          <div class="muted" style="font-size:14px">Myndband · Nótur · Æfingaplan</div></div>
+        <span class="status ${l.status === 'Birt' ? 'ok' : 'draft'}">${l.status}</span>
+        <button class="link-btn" data-edit="${l.n}">Breyta</button>
+      </div>`).join('');
+  }
+
+  // Yfirferð
+  const dlg = document.getElementById('review');
+  let current = null;
+  document.addEventListener('click', e => {
+    const r = e.target.closest('[data-review]');
+    if (r) {
+      current = +r.dataset.review;
+      const q = queue[current];
+      document.getElementById('r-lota').textContent = q.lota.toUpperCase();
+      document.getElementById('r-name').textContent = q.name;
+      document.getElementById('r-len').textContent = `Upptaka · ${q.len}`;
+      const note = document.getElementById('r-note');
+      note.textContent = q.note ? `Nemandinn skrifar: „${q.note}“` : 'Engin skilaboð fylgdu upptökunni.';
+      dlg.showModal();
+      return;
+    }
+    const sn = e.target.closest('[data-snippet]');
+    if (sn) { const t = document.getElementById('r-reply'); t.value += sn.dataset.snippet; t.focus(); return; }
+    const m = e.target.closest('[data-msg]');
+    if (m) { toast(`Skilaboð til ${m.dataset.msg} (sýnishorn)`); return; }
+    const ed = e.target.closest('[data-edit]');
+    if (ed) { toast(`Hér myndi opnast ritill fyrir Lotu ${ed.dataset.edit}`); return; }
+  });
+  document.getElementById('new-lesson').addEventListener('click', () => toast('Hér myndi opnast ritill fyrir nýja lotu'));
+
+  dlg.addEventListener('close', () => {
+    if (dlg.returnValue === 'send' && current !== null) {
+      const q = queue.splice(current, 1)[0];
+      const nextOpened = document.getElementById('r-next').checked;
+      if (nextOpened) {
+        const s = students.find(s => s.name === q.name);
+        if (s && s.lota < 8) s.lota++;
+      }
+      renderQueue(); renderStudents();
+      toast(`Endurgjöf send til ${q.name}${nextOpened ? ' og næsta lota opnuð' : ''}`);
+    }
+    document.getElementById('review-form').reset();
+    current = null;
+  });
+
+  renderQueue(); renderStudents(); renderLessons();
+</script>
+</body>
+</html>

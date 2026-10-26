@@ -283,3 +283,46 @@ dialog::backdrop { background: rgba(15,26,28,.5); }
 .page-intro h1 { font-size: clamp(36px, 5vw, 52px); font-weight: 800; letter-spacing: -0.02em; }
 .main-nav a[aria-current="page"] { color: var(--accent); }
 .site-footer { border-top: 1px solid #22353A; }
+
+/* ---------- Innskráning ---------- */
+.login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px 16px; }
+.login-wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 24px; }
+.login-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 12px 32px rgba(15,26,28,.06); }
+.login-card h1 { font-size: 30px; font-weight: 800; }
+.login-card label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 15px; }
+.login-card input { font: inherit; font-weight: 400; height: 48px; padding: 0 14px; border: 1px solid #C3CCCA; border-radius: 10px; color: var(--ink); }
+.login-card input:focus { border-color: var(--accent); }
+.login-error { margin: 0; color: #9B2C1F; background: #FBEAE7; padding: 10px 14px; border-radius: 10px; font-size: 15px; }
+.login-small { font-size: 14px; color: var(--muted); text-align: center; }
+
+/* ---------- Kennarasvæði ---------- */
+.demo-note { font-size: 13px; font-weight: 600; color: var(--muted); background: var(--soft); padding: 6px 12px; border-radius: 999px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; }
+.stat { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+.stat small { display: block; font-size: 14px; color: var(--muted); }
+.stat strong { font: 800 34px/1.2 var(--display); }
+.queue { display: flex; flex-direction: column; }
+.queue-row { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.queue-row:first-child { border-top: 0; padding-top: 4px; }
+.queue-main { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.queue-main .muted { font-size: 14px; }
+.queue-note { font-size: 15px; color: var(--ink-2); font-style: italic; }
+.avatar.initials { background: var(--accent-soft); color: var(--accent-hover); font-size: 14px; width: 44px; height: 44px; }
+.avatar.initials.sm { width: 32px; height: 32px; font-size: 12px; }
+.empty { text-align: center; padding: 24px 0; }
+.table-wrap { overflow-x: auto; margin: 0 -24px; padding: 0 24px; }
+.table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 640px; }
+.table th, .table td { text-align: left; padding: 12px 12px 12px 0; border-top: 1px solid var(--line); vertical-align: middle; font-weight: 400; }
+.table thead th { font-size: 13px; font-weight: 600; color: var(--muted); border-top: 0; }
+.table tbody th { font-weight: 600; }
+.cell-name { display: flex; align-items: center; gap: 10px; }
+.cell-prog { display: flex; flex-direction: column; gap: 4px; min-width: 140px; font-size: 13px; }
+.status { display: inline-block; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.status.ok { background: var(--accent-soft); color: var(--accent-hover); }
+.status.warn { background: #FCEBD0; color: #7A4A06; }
+.status.draft { background: var(--soft); color: var(--muted); }
+.lesson-admin { display: flex; flex-direction: column; }
+.lesson-row { display: grid; grid-template-columns: 36px 1fr auto auto; gap: 14px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.lesson-row:first-child { border-top: 0; }
+.lesson-row .n { font: 800 22px/1 var(--display); color: var(--accent); }
+.r-note { background: var(--soft); padding: 12px 14px; border-radius: 10px; font-size: 15px; }
