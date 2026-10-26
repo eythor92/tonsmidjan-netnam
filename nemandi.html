@@ -38,6 +38,12 @@
       </button>
     </div>
 
+    <section class="panel" id="vikur">
+      <div class="panel-head"><h2>Vikurnar þínar</h2><span class="muted" style="font-size:14px" id="access"></span></div>
+      <div class="weeks" id="weeks" role="list"></div>
+      <p class="unlock-note" id="unlock-note"></p>
+    </section>
+
     <div class="grid-2">
       <section class="panel flush" id="lota">
         <div class="video-frame" style="aspect-ratio:16/9">
@@ -47,9 +53,9 @@
           </button>
         </div>
         <div class="panel-body">
-          <div class="eyebrow">VIKA 3 AF 4 · LOTA 3</div>
-          <h2 style="font-size:24px">Báðar hendur saman</h2>
-          <p class="muted">Í þessari lotu spilum við í fyrsta sinn með báðum höndum: hægri hönd spilar laglínuna og vinstri hönd heldur einföldum bassatóni. Byrjaðu hægt, hraðinn kemur seinna.</p>
+          <div class="eyebrow" id="l-eyebrow"></div>
+          <h2 style="font-size:24px" id="l-title"></h2>
+          <p class="muted" id="l-desc"></p>
           <div class="chips">
             <a class="chip" href="#">Nótur (PDF)</a>
             <a class="chip" href="#">Undirleikur til að spila með</a>
@@ -59,14 +65,9 @@
 
       <div class="stack">
         <section class="panel">
-          <div class="panel-head"><h2>Æfingaplan vikunnar</h2><span class="muted" id="plan-count" style="font-size:14px"></span></div>
+          <div class="panel-head"><h2 id="plan-title">Æfingaplan vikunnar</h2><span class="muted" id="plan-count" style="font-size:14px"></span></div>
           <div class="progress" aria-hidden="true"><span id="plan-bar"></span></div>
-          <div id="plan" style="display:flex;flex-direction:column;gap:12px">
-            <label class="check"><input type="checkbox"><span>5 mín: Fimm fingra staða, upp og niður með hvorri hendi</span></label>
-            <label class="check"><input type="checkbox"><span>5 mín: Hægri hönd ein: laglínan í Lotu 3</span></label>
-            <label class="check"><input type="checkbox"><span>10 mín: Báðar hendur saman, hægt með taktmæli</span></label>
-            <label class="check"><input type="checkbox"><span>Taka upp og senda kennara</span></label>
-          </div>
+          <div id="plan" style="display:flex;flex-direction:column;gap:12px"></div>
         </section>
 
         <section class="panel" id="dagbok">
@@ -95,11 +96,7 @@
   <form method="dialog" class="dialog-inner" id="upload-form">
     <h2 style="font-size:22px">Senda upptöku</h2>
     <label>Hvaða lota?
-      <select>
-        <option>Lota 3: Báðar hendur saman</option>
-        <option>Lota 2: Fimm fingra staða</option>
-        <option>Lota 1: Að kynnast hljómborðinu</option>
-      </select>
+      <select id="upload-week"></select>
     </label>
     <label>Upptaka (myndband eða hljóð)
       <input type="file" accept="video/*,audio/*" capture="user">
@@ -131,18 +128,96 @@
     t._h = setTimeout(() => t.classList.remove('show'), 2600);
   }
 
-  // Æfingaplan
-  const boxes = [...document.querySelectorAll('#plan input')];
-  const saved = store.get('tsn-plan', [true, true, false, false]);
-  boxes.forEach((b, i) => { b.checked = !!saved[i]; b.addEventListener('change', updatePlan); });
+  // ---------- Vikurnar ----------
+  // Sýnishorn: nemandinn byrjaði fyrir 17 dögum. Ný vika opnast sjálfkrafa á 7 daga fresti,
+  // eða fyrr ef kennarinn opnar hana eftir yfirferð. Eldri vikur eru alltaf opnar.
+  const DAY = 864e5;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const start = new Date(today - 17 * DAY);
+  const ACCESS_DAYS = 90;
+  const teacherUnlocked = 0; // vikur sem kennarinn hefur opnað fyrr en áætlað var
+
+  const WEEKS = [
+    { title: 'Að kynnast hljómborðinu', desc: 'Setstaða, handstaða, hvítu og svörtu nóturnar og hvar miðju-C er. Í lok vikunnar áttu að geta fundið allar C-nóturnar á hljómborðinu.',
+      plan: ['5 mín: Finna öll C, D og E á hljómborðinu', '5 mín: Setstaða og afslappaðar hendur', '10 mín: Spila með kennaranum í myndbandinu', 'Taka upp og senda kennara'] },
+    { title: 'Fimm fingra staða', desc: 'Fingranúmer og fyrstu æfingarnar með hvorri hendi fyrir sig. Markmiðið er jafnir og sterkir fingur.',
+      plan: ['5 mín: Fingranúmer, hægri hönd', '5 mín: Fingranúmer, vinstri hönd', '10 mín: Fimm fingra æfing upp og niður', 'Taka upp og senda kennara'] },
+    { title: 'Báðar hendur saman', desc: 'Í þessari lotu spilum við í fyrsta sinn með báðum höndum: hægri hönd spilar laglínuna og vinstri hönd heldur einföldum bassatóni. Byrjaðu hægt, hraðinn kemur seinna.',
+      plan: ['5 mín: Fimm fingra staða, upp og niður með hvorri hendi', '5 mín: Hægri hönd ein: laglínan í Lotu 3', '10 mín: Báðar hendur saman, hægt með taktmæli', 'Taka upp og senda kennara'] },
+    { title: 'Nótnalestur', desc: 'G-lykill og F-lykill, nótnagildi og að telja taktinn. Í lok vikunnar lestu einfalda laglínu beint af blaði.',
+      plan: ['5 mín: Nótnaheitin í G-lykli', '5 mín: Nótnaheitin í F-lykli', '10 mín: Lesa og spila æfingalaglínuna', 'Taka upp og senda kennara'] },
+  ];
+
+  const opensOn = i => new Date(start.getTime() + i * 7 * DAY);          // dagsetning sem vika i+1 opnast
+  const unlockedCount = Math.min(WEEKS.length, Math.floor((today - start) / (7 * DAY)) + 1 + teacherUnlocked);
+  const DAGAR = ['sun.', 'mán.', 'þri.', 'mið.', 'fim.', 'fös.', 'lau.'];
+  const MAN = ['janúar', 'febrúar', 'mars', 'apríl', 'maí', 'júní', 'júlí', 'ágúst', 'september', 'október', 'nóvember', 'desember'];
+  const fmt = d => `${DAGAR[d.getDay()]} ${d.getDate()}. ${MAN[d.getMonth()].slice(0, 3)}.`;
+  const fmtLong = d => `${d.getDate()}. ${MAN[d.getMonth()]} ${d.getFullYear()}`;
+  let selected = unlockedCount - 1;
+
+  function weekStatus(i) {
+    if (i >= unlockedCount) return 'locked';
+    if (i < unlockedCount - 1) return 'done';
+    return 'current';
+  }
+
+  function renderWeeks() {
+    const lock = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+    const check = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
+    document.getElementById('weeks').innerHTML = WEEKS.map((w, i) => {
+      const st = weekStatus(i);
+      const label = st === 'done' ? `${check} Opin` : st === 'current' ? 'Vika í gangi' : `${lock} Opnast ${fmt(opensOn(i))}`;
+      return `<div role="listitem"><button class="week-tile ${st}${i === selected ? ' selected' : ''}" data-week="${i}" ${st === 'locked' ? 'disabled aria-disabled="true"' : ''} aria-pressed="${i === selected}">
+        <span class="week-num">Vika ${i + 1}</span>
+        <span class="week-title">${w.title}</span>
+        <span class="week-state">${label}</span>
+      </button></div>`;
+    }).join('');
+
+    const note = document.getElementById('unlock-note');
+    if (unlockedCount < WEEKS.length) {
+      note.innerHTML = `<strong>Vika ${unlockedCount + 1} opnast sjálfkrafa ${fmt(opensOn(unlockedCount))}</strong>, eða fyrr ef kennarinn opnar hana eftir að hafa farið yfir upptökuna þína.`;
+    } else {
+      note.innerHTML = '<strong>Allar vikur grunnnámskeiðsins eru opnar.</strong> Þegar þú ert tilbúin(n) heldurðu áfram í Námskeið 2.';
+    }
+    document.getElementById('access').textContent = `Aðgangur til ${fmtLong(new Date(start.getTime() + ACCESS_DAYS * DAY))}`;
+
+    const sel = document.getElementById('upload-week');
+    sel.innerHTML = WEEKS.slice(0, unlockedCount).map((w, i) => `<option${i === unlockedCount - 1 ? ' selected' : ''}>Vika ${i + 1}: ${w.title}</option>`).reverse().join('');
+  }
+
+  function renderLesson() {
+    const w = WEEKS[selected];
+    document.getElementById('l-eyebrow').textContent = `VIKA ${selected + 1} AF ${WEEKS.length}${weekStatus(selected) === 'done' ? ' · TIL UPPRIFJUNAR' : ''}`;
+    document.getElementById('l-title').textContent = w.title;
+    document.getElementById('l-desc').textContent = w.desc;
+    document.getElementById('plan-title').textContent = `Æfingaplan, vika ${selected + 1}`;
+    const saved = store.get('tsn-plan-' + selected, weekStatus(selected) === 'done' ? w.plan.map(() => true) : [true, true, false, false]);
+    document.getElementById('plan').innerHTML = w.plan.map((t, i) =>
+      `<label class="check"><input type="checkbox" data-i="${i}"${saved[i] ? ' checked' : ''}><span>${t}</span></label>`).join('');
+    updatePlan();
+  }
+
   function updatePlan() {
+    const boxes = [...document.querySelectorAll('#plan input')];
     const state = boxes.map(b => b.checked);
-    store.set('tsn-plan', state);
+    store.set('tsn-plan-' + selected, state);
     const done = state.filter(Boolean).length;
     document.getElementById('plan-count').textContent = `${done} af ${boxes.length}`;
     document.getElementById('plan-bar').style.width = (done / boxes.length * 100) + '%';
   }
-  updatePlan();
+  document.getElementById('plan').addEventListener('change', updatePlan);
+
+  document.getElementById('weeks').addEventListener('click', e => {
+    const b = e.target.closest('.week-tile');
+    if (!b || b.disabled) return;
+    selected = +b.dataset.week;
+    renderWeeks(); renderLesson();
+    document.getElementById('lota').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  renderWeeks(); renderLesson();
 
   // Æfingadagbók
   const names = ['Mán', 'Þri', 'Mið', 'Fim', 'Fös', 'Lau', 'Sun'];
