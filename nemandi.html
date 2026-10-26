@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mitt svæði | Netnám Tónsmiðju Suðurlands</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <a class="brand brand-boxed" href="index.html">
+      <img class="brand-logo" src="logo.png" alt="Tónsmiðja Suðurlands" onerror="this.onerror=null;this.src='https://tonsmidjan.net/wp-content/uploads/2024/04/Tonsmidja-FullLogo_Transparent.png'">
+      <span class="brand-tag">NETNÁM</span>
+    </a>
+    <nav class="side-nav" aria-label="Valmynd nemanda">
+      <a class="active" href="nemandi.html">Yfirlit</a>
+      <a href="piano.html#lotur">Lotur</a>
+      <a href="#dagbok">Æfingadagbók</a>
+      <a href="#endurgjof">Upptökur mínar</a>
+      <a href="skilabod.html">Skilaboð <span class="badge">1</span></a>
+    </nav>
+    <div class="sidebar-foot">Kennari: [Nafn kennara]<br><a href="index.html" style="color:#B7C4C1">Útskrá</a></div>
+  </aside>
+
+  <main class="app-main">
+    <div class="app-top">
+      <div>
+        <div class="muted">Píanó fyrir byrjendur</div>
+        <h1>Góðan daginn, [Nafn]</h1>
+      </div>
+      <button class="btn btn-primary" id="open-upload">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg>
+        Senda upptöku
+      </button>
+    </div>
+
+    <div class="grid-2">
+      <section class="panel flush" id="lota">
+        <div class="video-frame" style="aspect-ratio:16/9">
+          <span class="label">[Kennslumyndband]</span>
+          <button class="play" aria-label="Spila myndband" style="width:64px;height:64px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#0F1A1C" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <div class="panel-body">
+          <div class="eyebrow">LOTA 3 AF 8</div>
+          <h2 style="font-size:24px">Báðar hendur saman</h2>
+          <p class="muted">Í þessari lotu spilum við í fyrsta sinn með báðum höndum: hægri hönd spilar laglínuna og vinstri hönd heldur einföldum bassatóni. Byrjaðu hægt, hraðinn kemur seinna.</p>
+          <div class="chips">
+            <a class="chip" href="#">Nótur (PDF)</a>
+            <a class="chip" href="#">Undirleikur til að spila með</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="stack">
+        <section class="panel">
+          <div class="panel-head"><h2>Æfingaplan vikunnar</h2><span class="muted" id="plan-count" style="font-size:14px"></span></div>
+          <div class="progress" aria-hidden="true"><span id="plan-bar"></span></div>
+          <div id="plan" style="display:flex;flex-direction:column;gap:12px">
+            <label class="check"><input type="checkbox"><span>5 mín: Fimm fingra staða, upp og niður með hvorri hendi</span></label>
+            <label class="check"><input type="checkbox"><span>5 mín: Hægri hönd ein: laglínan í Lotu 3</span></label>
+            <label class="check"><input type="checkbox"><span>10 mín: Báðar hendur saman, hægt með taktmæli</span></label>
+            <label class="check"><input type="checkbox"><span>Taka upp og senda kennara</span></label>
+          </div>
+        </section>
+
+        <section class="panel" id="dagbok">
+          <div class="panel-head"><h2>Æfingadagbók</h2><span class="muted" style="font-size:14px">Þessi vika</span></div>
+          <div class="week" id="week"></div>
+          <button class="link-btn" id="log-today">+ Skrá æfingu í dag</button>
+        </section>
+      </div>
+    </div>
+
+    <section class="panel" id="endurgjof">
+      <div class="panel-head"><h2>Nýjasta endurgjöf</h2><a href="skilabod.html" style="font-size:15px;font-weight:600">Opna samtal</a></div>
+      <div class="feedback">
+        <span class="avatar" style="width:44px;height:44px">K</span>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="meta"><strong>[Nafn kennara]</strong> · við upptöku „Lota 2: Fimm fingra staða“</div>
+          <p>Flottur taktur! Reyndu að halda úlnliðunum aðeins hærra, þá verða fingurnir léttari á nótunum. Ég setti stutt myndband með sem sýnir hvað ég meina.</p>
+          <button class="chip" style="align-self:flex-start">▶ Myndsvar frá kennara · 0:48</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog id="upload">
+  <form method="dialog" class="dialog-inner" id="upload-form">
+    <h2 style="font-size:22px">Senda upptöku</h2>
+    <label>Hvaða lota?
+      <select>
+        <option>Lota 3: Báðar hendur saman</option>
+        <option>Lota 2: Fimm fingra staða</option>
+        <option>Lota 1: Að kynnast hljómborðinu</option>
+      </select>
+    </label>
+    <label>Upptaka (myndband eða hljóð)
+      <input type="file" accept="video/*,audio/*" capture="user">
+    </label>
+    <label>Skilaboð til kennara (valfrjálst)
+      <textarea rows="3" placeholder="T.d. hvað gekk vel eða hvar þú festist…"></textarea>
+    </label>
+    <div class="dialog-actions">
+      <button class="btn btn-outline btn-sm" value="cancel" formnovalidate>Hætta við</button>
+      <button class="btn btn-primary btn-sm" value="send">Senda</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  // ATH: Þetta er sýnishorn. Ekkert er sent á netþjón; staðan geymist aðeins í þessum vafra.
+  const store = {
+    get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+  };
+
+  function toast(text) {
+    const t = document.getElementById('toast');
+    t.textContent = text;
+    t.classList.add('show');
+    clearTimeout(t._h);
+    t._h = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  // Æfingaplan
+  const boxes = [...document.querySelectorAll('#plan input')];
+  const saved = store.get('tsn-plan', [true, true, false, false]);
+  boxes.forEach((b, i) => { b.checked = !!saved[i]; b.addEventListener('change', updatePlan); });
+  function updatePlan() {
+    const state = boxes.map(b => b.checked);
+    store.set('tsn-plan', state);
+    const done = state.filter(Boolean).length;
+    document.getElementById('plan-count').textContent = `${done} af ${boxes.length}`;
+    document.getElementById('plan-bar').style.width = (done / boxes.length * 100) + '%';
+  }
+  updatePlan();
+
+  // Æfingadagbók
+  const names = ['Mán', 'Þri', 'Mið', 'Fim', 'Fös', 'Lau', 'Sun'];
+  const todayIdx = (new Date().getDay() + 6) % 7; // mánudagur = 0
+  let days = store.get('tsn-week', [true, true, false, true, false, false, false]);
+  function renderWeek() {
+    document.getElementById('week').innerHTML = names.map((n, i) =>
+      `<div class="day${days[i] ? ' done' : ''}${i === todayIdx ? ' today' : ''}"><span></span>${n}</div>`
+    ).join('');
+    const btn = document.getElementById('log-today');
+    btn.textContent = days[todayIdx] ? '✓ Æfing skráð í dag' : '+ Skrá æfingu í dag';
+  }
+  document.getElementById('log-today').addEventListener('click', () => {
+    days[todayIdx] = !days[todayIdx];
+    store.set('tsn-week', days);
+    renderWeek();
+    if (days[todayIdx]) toast('Vel gert! Æfingin er skráð.');
+  });
+  renderWeek();
+
+  // Senda upptöku
+  const dlg = document.getElementById('upload');
+  document.getElementById('open-upload').addEventListener('click', () => dlg.showModal());
+  dlg.addEventListener('close', () => {
+    if (dlg.returnValue === 'send') toast('Upptakan er send til kennarans.');
+    document.getElementById('upload-form').reset();
+  });
+</script>
+</body>
+</html>

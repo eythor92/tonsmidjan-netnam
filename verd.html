@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verð | Netnám Tónsmiðju Suðurlands</title>
+  <meta name="description" content="Verð og algengar spurningar um netnám Tónsmiðju Suðurlands.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html">
+      <img class="brand-logo" src="logo.png" alt="Tónsmiðja Suðurlands" onerror="this.onerror=null;this.src='https://tonsmidjan.net/wp-content/uploads/2024/04/Tonsmidja-FullLogo_Transparent.png'">
+      <span class="brand-tag">NETNÁM</span>
+    </a>
+    <nav class="main-nav" id="main-nav" aria-label="Aðalvalmynd">
+      <a href="hvernig.html">Hvernig virkar þetta</a>
+      <a href="index.html#namskeid">Námskeið</a>
+      <a href="verd.html" aria-current="page">Verð</a>
+      <a href="verd.html#spurningar">Spurningar</a>
+    </nav>
+    <div class="header-actions">
+      <a class="link-plain" href="nemandi.html">Innskráning</a>
+      <a class="btn btn-primary btn-sm" href="piano.html#skraning">Skrá mig</a>
+      <button class="menu-toggle" aria-label="Opna valmynd" aria-expanded="false" aria-controls="main-nav">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+<main>
+  <section class="container page-intro">
+    <div class="crumbs"><a href="index.html">Forsíða</a> › Verð</div>
+    <h1>Verð og spurningar</h1>
+    <p class="hero-lead">Mánaðaráskrift sem þú getur sagt upp hvenær sem er.</p>
+  </section>
+
+  <section id="verd" class="section" style="padding-top:0">
+    <div class="container">
+            <div class="plans">
+        <div class="plan">
+          <h3>Netnám</h3>
+          <div class="price">[VERÐ] kr. <span>/ mánuði</span></div>
+          <ul>
+            <li>Aðgangur að öllum 8 lotum píanónámskeiðsins</li>
+            <li>[X] upptökur með endurgjöf á mánuði</li>
+            <li>Skilaboð við kennara</li>
+            <li>Æfingaplan og æfingadagbók</li>
+          </ul>
+          <a class="btn btn-primary" href="nemandi.html">Skrá mig í netnám</a>
+        </div>
+        <div class="plan soft">
+          <h3>Viðbót fyrir nemendur Tónsmiðjunnar</h3>
+          <div class="price">[VERÐ] kr. <span>/ mánuði</span></div>
+          <p class="muted">Fyrir þá sem eru þegar í tímum hjá okkur: kennsluefnið og æfingaplanið á netinu, á milli tíma.</p>
+          <a class="btn btn-outline" href="nemandi.html">Bæta við námið mitt</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="spurningar" class="section section-white">
+    <div class="container faq">
+      <div class="section-head"><h2>Algengar spurningar</h2></div>
+      <details open>
+        <summary>Þarf ég að mæta einhvern tímann?</summary>
+        <p>Nei. Allt námið fer fram á netinu. Þú æfir þig á þínum tíma og sendir upptökur þegar þér hentar.</p>
+      </details>
+      <details>
+        <summary>Hversu fljótt svarar kennarinn?</summary>
+        <p>[Svartími, t.d. innan X virkra daga]</p>
+      </details>
+      <details>
+        <summary>Hentar þetta börnum?</summary>
+        <p>[Aldursviðmið og hvort foreldri þurfi að aðstoða]</p>
+      </details>
+      <details>
+        <summary>Hvað þarf ég til að byrja?</summary>
+        <p>Hljóðfæri, síma eða tölvu með myndavél og nettengingu.</p>
+      </details>
+      <details>
+        <summary>Get ég sagt upp hvenær sem er?</summary>
+        <p>[Uppsagnarskilmálar]</p>
+      </details>
+    </div>
+  </section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div><strong>Tónsmiðja Suðurlands</strong>[Heimilisfang] · [Netfang] · [Sími]</div>
+    <div style="display:flex;gap:24px"><a href="#">Skilmálar</a><a href="#">Persónuvernd</a></div>
+  </div>
+</footer>
+
+<script>
+  // Valmynd í síma
+  const toggle = document.querySelector('.menu-toggle');
+  const nav = document.getElementById('main-nav');
+  toggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  });
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    nav.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }));
+</script>
+</body>
+</html>
