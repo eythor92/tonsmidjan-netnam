@@ -8,7 +8,8 @@ Drög að vefsíðu fyrir netnám Tónsmiðju Suðurlands: kennsla á myndbandi,
 - `piano.html` – píanó: 15 námskeið á 4 getustigum
 - `namskeid.js` – námskeiðaskráin (breyttu námskeiðum hér)
 - `hvernig.html` – hvernig netnámið virkar
-- `verd.html` – verð og spurningar
+- `verd.html` – verð
+- `spurningar.html` – algengar spurningar
 - `nemandi.html` – svæði nemanda (sýnishorn)
 - `skilabod.html` – samtal við kennara (sýnishorn)
 - `innskraning.html` – innskráning: veldu notanda (Stefán, Eyþór eða nemandi)
