@@ -147,18 +147,21 @@
     { title: 'Báðar hendur saman', desc: 'Í þessari lotu spilum við í fyrsta sinn með báðum höndum: hægri hönd spilar laglínuna og vinstri hönd heldur einföldum bassatóni. Byrjaðu hægt, hraðinn kemur seinna.',
       plan: ['5 mín: Fimm fingra staða, upp og niður með hvorri hendi', '5 mín: Hægri hönd ein: laglínan í Lotu 3', '10 mín: Báðar hendur saman, hægt með taktmæli', 'Taka upp og senda kennara'] },
     { title: 'Lagið þitt', song: true,
-      desc: 'Síðasta vikan er þín: veldu lag af lagalista kennarans. Fyrir hvert lag er kennslumyndband þar sem farið er yfir það skref fyrir skref. Í lok vikunnar sendirðu lokaupptöku.',
+      desc: 'Síðasta vikan er þín: veldu lag af lagalista kennarans, allt frá því sem er vinsælt núna yfir í íslensk og sígild lög. Fyrir hvert lag er kennslumyndband þar sem farið er yfir það skref fyrir skref. Í lok vikunnar sendirðu lokaupptöku.',
       plan: ['Horfa á kennslumyndbandið fyrir lagið', '5 mín: Hægri hönd ein, hægt', '5 mín: Vinstri hönd ein', '10 mín: Báðar hendur saman og senda lokaupptöku'] },
   ];
 
   // Lagalisti kennarans fyrir grunnnámskeiðið. Hvert lag hefur sitt kennslumyndband.
   const SONGS = [
-    { id: 'gamli-noi',  title: 'Gamli Nói',                 origin: 'Íslenskt þjóðlag',     cat: 'Íslensk lög', level: 1, len: '9 mín' },
-    { id: 'krummi',     title: 'Krummi svaf í klettagjá',   origin: 'Íslenskt þjóðlag',     cat: 'Íslensk lög', level: 2, len: '12 mín' },
-    { id: 'bi-bi',      title: 'Bí bí og blaka',            origin: 'Íslensk vögguvísa',    cat: 'Íslensk lög', level: 1, len: '8 mín' },
-    { id: 'blika',      title: 'Blika, blika litla stjarna', origin: 'Franskt þjóðlag',     cat: 'Barnalög',    level: 1, len: '7 mín' },
-    { id: 'odurinn',    title: 'Óðurinn til gleðinnar',     origin: 'Ludwig van Beethoven', cat: 'Klassík',     level: 2, len: '14 mín' },
-    { id: 'jolin',      title: 'Heims um ból',              origin: 'Franz Gruber',         cat: 'Jólalög',     level: 2, len: '13 mín' },
+    { id: 'birds',    title: 'Birds of a Feather',      origin: 'Billie Eilish',               cat: 'Vinsælt núna', level: 1, len: '11 mín' },
+    { id: 'espresso', title: 'Espresso',                origin: 'Sabrina Carpenter',           cat: 'Vinsælt núna', level: 2, len: '12 mín' },
+    { id: 'smile',    title: 'Die With A Smile',        origin: 'Lady Gaga og Bruno Mars',     cat: 'Vinsælt núna', level: 2, len: '14 mín' },
+    { id: 'golden',   title: 'Golden',                  origin: 'Úr KPop Demon Hunters',       cat: 'Kvikmyndir',   level: 2, len: '13 mín' },
+    { id: 'stars',    title: 'City of Stars',           origin: 'Úr La La Land',               cat: 'Kvikmyndir',   level: 1, len: '10 mín' },
+    { id: 'start',    title: 'From The Start',          origin: 'Laufey',                      cat: 'Íslenskt',     level: 2, len: '12 mín' },
+    { id: 'talks',    title: 'Little Talks',            origin: 'Of Monsters and Men',         cat: 'Íslenskt',     level: 1, len: '9 mín' },
+    { id: 'odurinn',  title: 'Óðurinn til gleðinnar',   origin: 'Ludwig van Beethoven',        cat: 'Sígilt',       level: 1, len: '9 mín' },
+    { id: 'krummi',   title: 'Krummi svaf í klettagjá', origin: 'Íslenskt þjóðlag',            cat: 'Sígilt',       level: 1, len: '8 mín' },
   ];
   const CATS = ['Öll lög', ...new Set(SONGS.map(x => x.cat))];
   let songFilter = 'Öll lög';

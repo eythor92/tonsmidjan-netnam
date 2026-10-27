@@ -69,7 +69,7 @@
 
     <section class="panel" id="lagasafn">
       <div class="panel-head"><h2>Lagasafn</h2><button class="btn btn-primary btn-sm" id="new-song">+ Bæta við lagi</button></div>
-      <p class="muted" style="font-size:15px">Lögin sem nemendur geta valið í viku 4. Hvert lag þarf kennslumyndband áður en það birtist nemendum.</p>
+      <p class="muted" style="font-size:15px">Lögin sem nemendur geta valið í viku 4. Haltu listanum ferskum með lögum sem eru vinsæl núna, og hafðu eitthvað sígilt með. Lag birtist nemendum þegar kennslumyndbandið er komið.</p>
       <div class="tabs" role="tablist" aria-label="Námskeið" id="song-tabs"></div>
       <ul class="song-list" id="song-admin"></ul>
     </section>
@@ -147,9 +147,9 @@
     { name: 'Anna Sigurðardóttir', lota: 3, last: 0 },
     { name: 'Bjarki Jónsson',      lota: 2, last: 1 },
     { name: 'Sara Helgadóttir',    lota: 5, last: 1 },
-    { name: 'Guðrún Ólafsdóttir',  lota: 4, last: 2, song: 'krummi' },
+    { name: 'Guðrún Ólafsdóttir',  lota: 4, last: 2, song: 'golden' },
     { name: 'Hilmar Pétursson',    lota: 1, last: 6 },
-    { name: 'Katla Björnsdóttir',  lota: 8, last: 0, song: 'sprengisandur' },
+    { name: 'Katla Björnsdóttir',  lota: 8, last: 0, song: 'flowers' },
     { name: 'Ólafur Einarsson',    lota: 2, last: 9 },
   ];
 
@@ -169,16 +169,22 @@
     { c: 2, n: 4, title: 'Lagið þitt (lokaverkefni)', status: 'Drög', song: true },
   ];
   const SONGS = [
-    { id: 'gamli-noi',     c: 0, title: 'Gamli Nói',                  origin: 'Íslenskt þjóðlag',     level: 1, video: true },
-    { id: 'krummi',        c: 0, title: 'Krummi svaf í klettagjá',    origin: 'Íslenskt þjóðlag',     level: 2, video: true },
-    { id: 'bi-bi',         c: 0, title: 'Bí bí og blaka',             origin: 'Íslensk vögguvísa',    level: 1, video: true },
-    { id: 'blika',         c: 0, title: 'Blika, blika litla stjarna', origin: 'Franskt þjóðlag',      level: 1, video: true },
-    { id: 'odurinn',       c: 0, title: 'Óðurinn til gleðinnar',      origin: 'Ludwig van Beethoven', level: 2, video: true },
-    { id: 'jolin',         c: 0, title: 'Heims um ból',               origin: 'Franz Gruber',         level: 2, video: true },
-    { id: 'sprengisandur', c: 1, title: 'Á Sprengisandi',             origin: 'Sigvaldi Kaldalóns',   level: 2, video: true },
-    { id: 'canon',         c: 1, title: 'Kanón í D (einfölduð)',      origin: 'Johann Pachelbel',     level: 2, video: false },
-    { id: 'elise',         c: 2, title: 'Für Elise (fyrsti hluti)',   origin: 'Ludwig van Beethoven', level: 3, video: false },
-    { id: 'vatnsenda',     c: 2, title: 'Vísur Vatnsenda-Rósu',       origin: 'Íslenskt þjóðlag',     level: 3, video: false },
+    { id: 'birds',    c: 0, title: 'Birds of a Feather',      origin: 'Billie Eilish',            level: 1, video: true },
+    { id: 'espresso', c: 0, title: 'Espresso',                origin: 'Sabrina Carpenter',        level: 2, video: true },
+    { id: 'smile',    c: 0, title: 'Die With A Smile',        origin: 'Lady Gaga og Bruno Mars',  level: 2, video: true },
+    { id: 'golden',   c: 0, title: 'Golden',                  origin: 'Úr KPop Demon Hunters',    level: 2, video: true },
+    { id: 'stars',    c: 0, title: 'City of Stars',           origin: 'Úr La La Land',            level: 1, video: true },
+    { id: 'start',    c: 0, title: 'From The Start',          origin: 'Laufey',                   level: 2, video: true },
+    { id: 'talks',    c: 0, title: 'Little Talks',            origin: 'Of Monsters and Men',      level: 1, video: true },
+    { id: 'odurinn',  c: 0, title: 'Óðurinn til gleðinnar',   origin: 'Ludwig van Beethoven',     level: 1, video: true },
+    { id: 'krummi',   c: 0, title: 'Krummi svaf í klettagjá', origin: 'Íslenskt þjóðlag',         level: 1, video: true },
+    { id: 'flowers',  c: 1, title: 'Flowers',                 origin: 'Miley Cyrus',              level: 2, video: true },
+    { id: 'waydown',  c: 1, title: 'Way Down We Go',          origin: 'Kaleo',                    level: 2, video: true },
+    { id: 'someone',  c: 1, title: 'Someone You Loved',       origin: 'Lewis Capaldi',            level: 2, video: false },
+    { id: 'sprengi',  c: 1, title: 'Á Sprengisandi',          origin: 'Sigvaldi Kaldalóns',       level: 2, video: true },
+    { id: 'river',    c: 2, title: 'River Flows in You',      origin: 'Yiruma',                   level: 3, video: false },
+    { id: 'clocks',   c: 2, title: 'Clocks',                  origin: 'Coldplay',                 level: 3, video: false },
+    { id: 'elise',    c: 2, title: 'Für Elise (fyrsti hluti)', origin: 'Ludwig van Beethoven',    level: 3, video: false },
   ];
   let songTab = 0;
   const songName = id => (SONGS.find(x => x.id === id) || {}).title;

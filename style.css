@@ -390,3 +390,7 @@ dialog::backdrop { background: rgba(15,26,28,.5); }
 .user-pick svg { color: var(--muted); flex: none; }
 .user-divider { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; }
 .user-divider::before, .user-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* Verð: besti kosturinn */
+.plan.best { border: 2px solid var(--accent); position: relative; }
+.best-tag { position: absolute; top: -14px; left: 32px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
