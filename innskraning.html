@@ -16,42 +16,43 @@
     <span class="brand-tag">NETNÁM</span>
   </a>
 
-  <form class="login-card" id="login" novalidate>
-    <h1>Innskráning</h1>
-    <p class="muted" style="font-size:15px">Skráðu þig inn til að halda áfram í netnáminu.</p>
-    <label>Notandanafn
-      <input type="text" id="user" autocomplete="username" required>
-    </label>
-    <label>Lykilorð
-      <input type="password" id="pass" autocomplete="current-password" required>
-    </label>
-    <p class="login-error" id="err" role="alert" hidden>Rangt notandanafn eða lykilorð.</p>
-    <button class="btn btn-primary" type="submit" style="width:100%">Skrá inn</button>
-    <a href="#" class="login-small">Gleymt lykilorð?</a>
-  </form>
+  <div class="login-card">
+    <h1>Hver ert þú?</h1>
+    <p class="muted" style="font-size:15px">Veldu notanda til að halda áfram.</p>
 
-  <p class="login-small" style="text-align:center">Ertu nemandi? <a href="nemandi.html">Skoða svæði nemanda (sýnishorn)</a></p>
+    <ul class="user-list" id="teachers" aria-label="Kennarar"></ul>
+
+    <div class="user-divider"><span>eða</span></div>
+
+    <a class="user-pick student" href="nemandi.html">
+      <span class="avatar initials">N</span>
+      <span class="user-text"><strong>Nemandi</strong><small>Skoða svæði nemanda</small></span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+
+  <p class="login-small">Sýnishorn: hver sem er getur valið notanda.</p>
 </main>
 
 <script>
-  // ATH: Sýnishorn eingöngu. Þessi innskráning keyrir í vafranum og veitir
-  // ENGA raunverulega vörn. Í alvöru kerfi fer innskráning fram á netþjóni.
-  const DEMO = { user: 'stefán', pass: '123', name: 'Stefán' };
-  const form = document.getElementById('login');
-  const err = document.getElementById('err');
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const u = document.getElementById('user').value.trim().toLowerCase();
-    const p = document.getElementById('pass').value;
-    if ((u === DEMO.user || u === 'stefan') && p === DEMO.pass) {
-      try { sessionStorage.setItem('tsn-kennari', DEMO.name); } catch {}
-      location.href = 'kennari.html';
-    } else {
-      err.hidden = false;
-      document.getElementById('pass').value = '';
-      document.getElementById('pass').focus();
-    }
+  // Sýnishorn: engin lykilorð. Bættu kennurum við listann hér.
+  const TEACHERS = [
+    { name: 'Stefán', role: 'Kennari' },
+    { name: 'Eyþór',  role: 'Kennari' },
+  ];
+  const arrow = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+  const list = document.getElementById('teachers');
+  list.innerHTML = TEACHERS.map((t, i) => `
+    <li><button class="user-pick" data-i="${i}">
+      <span class="avatar">${t.name[0]}</span>
+      <span class="user-text"><strong>${t.name}</strong><small>${t.role}</small></span>
+      ${arrow}
+    </button></li>`).join('');
+  list.addEventListener('click', e => {
+    const b = e.target.closest('[data-i]');
+    if (!b) return;
+    try { sessionStorage.setItem('tsn-kennari', TEACHERS[+b.dataset.i].name); } catch {}
+    location.href = 'kennari.html';
   });
 </script>
 </body>

@@ -378,3 +378,15 @@ dialog::backdrop { background: rgba(15,26,28,.5); }
 .lesson.song { border-color: var(--amber); background: #FFF8EC; }
 .lesson.song .free-tag { background: #FCEBD0; color: #7A4A06; }
 [hidden] { display: none !important; }
+
+/* Notendaval á innskráningu */
+.user-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.user-pick { width: 100%; display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; font: inherit; color: var(--ink); text-align: left; text-decoration: none; cursor: pointer; transition: border-color .15s, background .15s; }
+.user-pick:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+.user-pick .avatar { width: 44px; height: 44px; font-size: 17px; }
+.user-text { flex: 1; display: flex; flex-direction: column; }
+.user-text strong { font: 700 17px var(--display); }
+.user-text small { font-size: 14px; color: var(--muted); }
+.user-pick svg { color: var(--muted); flex: none; }
+.user-divider { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; }
+.user-divider::before, .user-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
