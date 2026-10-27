@@ -1,0 +1,37 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "meta": {
+    "title": "Tónsmiðjan – prufa",
+    "description": "WordPress-þema Tónsmiðju Suðurlands til prufu.",
+    "author": "eythor92"
+  },
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "login": true,
+  "steps": [
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "url",
+        "url": "https://eythor92.github.io/tonsmidjan-netnam/wordpress/tonsmidjan.zip"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "Tónsmiðja Suðurlands",
+        "blogdescription": "Þitt líf – þín sál – þín tónlist"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\n// Uppsetning fyrir prufu í WordPress Playground: býr til síður og stillir forsíðu.\nrequire_once '/wordpress/wp-load.php';\n\n$pages = array(\n\t'Um' => '<!-- wp:paragraph --><p>Tónsmiðja Suðurlands er tónlistarskóli sem býður nám á öll helstu hljóðfæri, söng og tónlistartækni. [Saga skólans og kynning kemur hér.]</p><!-- /wp:paragraph -->',\n\t'Kennarar' => '<!-- wp:pattern {\"slug\":\"tonsmidjan/kennarar\"} /-->',\n\t'Verðskrá' => '<!-- wp:pattern {\"slug\":\"tonsmidjan/verdskra\"} /-->',\n\t'Lifandi starf' => '<!-- wp:paragraph --><p>[Tónleikar, samstarf við sveitarfélögin og annað lifandi starf.]</p><!-- /wp:paragraph -->',\n);\n$order = 1;\nforeach ( $pages as $title => $content ) {\n\twp_insert_post( array( 'post_title' => $title, 'post_type' => 'page', 'post_status' => 'publish', 'post_content' => $content, 'menu_order' => $order++ ) );\n}\n$sample = get_page_by_path( 'sample-page' );\nif ( $sample ) { wp_delete_post( $sample->ID, true ); }\nwp_update_post( array( 'ID' => 1, 'post_title' => 'Netnám í píanói er hafið', 'post_content' => '<!-- wp:paragraph --><p>Nú getur þú lært á píanó heima með kennslumyndböndum og endurgjöf frá kennara. [Frétt kemur hér.]</p><!-- /wp:paragraph -->' ) );\n"
+    }
+  ]
+}
