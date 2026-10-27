@@ -47,8 +47,9 @@
     <div class="grid-2">
       <section class="panel flush" id="lota">
         <div class="video-frame" style="aspect-ratio:16/9">
-          <span class="label">[Kennslumyndband]</span>
-          <button class="play" aria-label="Spila myndband" style="width:64px;height:64px">
+          <span class="label" id="v-label">[Kennslumyndband]</span>
+          <span class="video-lock" id="v-lock" hidden></span>
+          <button class="play" id="v-play" aria-label="Spila myndband" style="width:64px;height:64px">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="#0F1A1C" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
           </button>
         </div>
@@ -56,10 +57,11 @@
           <div class="eyebrow" id="l-eyebrow"></div>
           <h2 style="font-size:24px" id="l-title"></h2>
           <p class="muted" id="l-desc"></p>
-          <div class="chips">
+          <div class="chips" id="l-chips">
             <a class="chip" href="#">Nótur (PDF)</a>
             <a class="chip" href="#">Undirleikur til að spila með</a>
           </div>
+          <div id="song-area" class="song-area" hidden></div>
         </div>
       </section>
 
@@ -144,9 +146,24 @@
       plan: ['5 mín: Fingranúmer, hægri hönd', '5 mín: Fingranúmer, vinstri hönd', '10 mín: Fimm fingra æfing upp og niður', 'Taka upp og senda kennara'] },
     { title: 'Báðar hendur saman', desc: 'Í þessari lotu spilum við í fyrsta sinn með báðum höndum: hægri hönd spilar laglínuna og vinstri hönd heldur einföldum bassatóni. Byrjaðu hægt, hraðinn kemur seinna.',
       plan: ['5 mín: Fimm fingra staða, upp og niður með hvorri hendi', '5 mín: Hægri hönd ein: laglínan í Lotu 3', '10 mín: Báðar hendur saman, hægt með taktmæli', 'Taka upp og senda kennara'] },
-    { title: 'Nótnalestur', desc: 'G-lykill og F-lykill, nótnagildi og að telja taktinn. Í lok vikunnar lestu einfalda laglínu beint af blaði.',
-      plan: ['5 mín: Nótnaheitin í G-lykli', '5 mín: Nótnaheitin í F-lykli', '10 mín: Lesa og spila æfingalaglínuna', 'Taka upp og senda kennara'] },
+    { title: 'Lagið þitt', song: true,
+      desc: 'Síðasta vikan er þín: veldu lag af lagalista kennarans. Fyrir hvert lag er kennslumyndband þar sem farið er yfir það skref fyrir skref. Í lok vikunnar sendirðu lokaupptöku.',
+      plan: ['Horfa á kennslumyndbandið fyrir lagið', '5 mín: Hægri hönd ein, hægt', '5 mín: Vinstri hönd ein', '10 mín: Báðar hendur saman og senda lokaupptöku'] },
   ];
+
+  // Lagalisti kennarans fyrir grunnnámskeiðið. Hvert lag hefur sitt kennslumyndband.
+  const SONGS = [
+    { id: 'gamli-noi',  title: 'Gamli Nói',                 origin: 'Íslenskt þjóðlag',     cat: 'Íslensk lög', level: 1, len: '9 mín' },
+    { id: 'krummi',     title: 'Krummi svaf í klettagjá',   origin: 'Íslenskt þjóðlag',     cat: 'Íslensk lög', level: 2, len: '12 mín' },
+    { id: 'bi-bi',      title: 'Bí bí og blaka',            origin: 'Íslensk vögguvísa',    cat: 'Íslensk lög', level: 1, len: '8 mín' },
+    { id: 'blika',      title: 'Blika, blika litla stjarna', origin: 'Franskt þjóðlag',     cat: 'Barnalög',    level: 1, len: '7 mín' },
+    { id: 'odurinn',    title: 'Óðurinn til gleðinnar',     origin: 'Ludwig van Beethoven', cat: 'Klassík',     level: 2, len: '14 mín' },
+    { id: 'jolin',      title: 'Heims um ból',              origin: 'Franz Gruber',         cat: 'Jólalög',     level: 2, len: '13 mín' },
+  ];
+  const CATS = ['Öll lög', ...new Set(SONGS.map(x => x.cat))];
+  let songFilter = 'Öll lög';
+  let browsing = false;
+  const chosenSong = () => SONGS.find(x => x.id === store.get('tsn-song', null));
 
   const opensOn = i => new Date(start.getTime() + i * 7 * DAY);          // dagsetning sem vika i+1 opnast
   const unlockedCount = Math.min(WEEKS.length, Math.floor((today - start) / (7 * DAY)) + 1 + teacherUnlocked);
@@ -167,8 +184,14 @@
     const check = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
     document.getElementById('weeks').innerHTML = WEEKS.map((w, i) => {
       const st = weekStatus(i);
-      const label = st === 'done' ? `${check} Opin` : st === 'current' ? 'Vika í gangi' : `${lock} Opnast ${fmt(opensOn(i))}`;
-      return `<div role="listitem"><button class="week-tile ${st}${i === selected ? ' selected' : ''}" data-week="${i}" ${st === 'locked' ? 'disabled aria-disabled="true"' : ''} aria-pressed="${i === selected}">
+      const note = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+      let label = st === 'done' ? `${check} Opin` : st === 'current' ? 'Vika í gangi' : `${lock} Opnast ${fmt(opensOn(i))}`;
+      if (w.song) {
+        const c = chosenSong();
+        label = c ? `${note} ${c.title}` : (st === 'locked' ? `${note} Skoða lögin` : `${note} Veldu lag`);
+      }
+      const peek = st === 'locked' && w.song;
+      return `<div role="listitem"><button class="week-tile ${st}${w.song ? ' song' : ''}${i === selected ? ' selected' : ''}" data-week="${i}" ${st === 'locked' && !peek ? 'disabled aria-disabled="true"' : ''} aria-pressed="${i === selected}">
         <span class="week-num">Vika ${i + 1}</span>
         <span class="week-title">${w.title}</span>
         <span class="week-state">${label}</span>
@@ -189,9 +212,19 @@
 
   function renderLesson() {
     const w = WEEKS[selected];
-    document.getElementById('l-eyebrow').textContent = `VIKA ${selected + 1} AF ${WEEKS.length}${weekStatus(selected) === 'done' ? ' · TIL UPPRIFJUNAR' : ''}`;
-    document.getElementById('l-title').textContent = w.title;
-    document.getElementById('l-desc').textContent = w.desc;
+    const st = weekStatus(selected);
+    const c = w.song ? chosenSong() : null;
+    document.getElementById('l-eyebrow').textContent = `VIKA ${selected + 1} AF ${WEEKS.length}${st === 'done' ? ' · TIL UPPRIFJUNAR' : ''}${w.song ? ' · LAGAVAL' : ''}`;
+    document.getElementById('l-title').textContent = c && !browsing ? c.title : w.title;
+    document.getElementById('l-desc').textContent = c && !browsing ? `${c.origin}. Kennslumyndband ${c.len}. Æfðu lagið alla vikuna og sendu lokaupptöku í lokin.` : w.desc;
+    document.getElementById('v-label').textContent = c ? `[Kennslumyndband: ${c.title}]` : w.song ? '[Veldu lag til að sjá myndbandið]' : '[Kennslumyndband]';
+    const locked = st === 'locked';
+    const vlock = document.getElementById('v-lock');
+    vlock.hidden = !locked;
+    vlock.textContent = locked ? `Myndbandið opnast ${fmt(opensOn(selected))}` : '';
+    document.getElementById('v-play').hidden = locked || (w.song && !c);
+    document.getElementById('l-chips').hidden = locked || (w.song && !c);
+    renderSongs();
     document.getElementById('plan-title').textContent = `Æfingaplan, vika ${selected + 1}`;
     const saved = store.get('tsn-plan-' + selected, weekStatus(selected) === 'done' ? w.plan.map(() => true) : [true, true, false, false]);
     document.getElementById('plan').innerHTML = w.plan.map((t, i) =>
@@ -209,10 +242,59 @@
   }
   document.getElementById('plan').addEventListener('change', updatePlan);
 
+  function renderSongs() {
+    const area = document.getElementById('song-area');
+    const w = WEEKS[selected];
+    if (!w.song) { area.hidden = true; return; }
+    area.hidden = false;
+    const c = chosenSong();
+    const locked = weekStatus(selected) === 'locked';
+    if (c && !browsing) {
+      area.innerHTML = `<div class="song-chosen">
+          <div><span class="muted" style="font-size:13px">Þú valdir</span><strong>${c.title}</strong></div>
+          <button class="chip" data-browse>Skipta um lag</button>
+        </div>
+        ${locked ? `<p class="muted" style="font-size:14px">Þú getur skipt um lag hvenær sem er fram að lokaupptöku. Vikan opnast ${fmt(opensOn(selected))}</p>` : ''}`;
+      return;
+    }
+    const dots = n => `<span class="level" aria-label="Erfiðleikastig ${n} af 3">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`;
+    const list = SONGS.filter(x => songFilter === 'Öll lög' || x.cat === songFilter);
+    area.innerHTML = `
+      <div class="song-head"><h3>Lagalisti kennarans</h3><span class="muted">${SONGS.length} lög</span></div>
+      ${locked ? `<p class="muted" style="font-size:14px">Þú mátt velja lagið strax, þótt vikan opnist ekki fyrr en ${fmt(opensOn(selected))}</p>` : ''}
+      <div class="tabs" role="tablist" aria-label="Flokkar">${CATS.map(cat => `<button role="tab" class="tab" aria-selected="${cat === songFilter}" data-cat="${cat}">${cat}</button>`).join('')}</div>
+      <ul class="song-list">${list.map(x => `
+        <li class="song-row${c && c.id === x.id ? ' picked' : ''}">
+          <div class="song-main"><strong>${x.title}</strong><span class="muted">${x.origin} · ${x.len}</span></div>
+          ${dots(x.level)}
+          <button class="btn btn-sm ${c && c.id === x.id ? 'btn-outline' : 'btn-primary'}" data-song="${x.id}">${c && c.id === x.id ? 'Valið' : 'Velja'}</button>
+        </li>`).join('')}
+      </ul>
+      <button class="link-btn" data-suggest>Finnurðu ekki rétta lagið? Stingdu upp á lagi</button>
+      ${c ? '<button class="link-btn" data-close style="margin-left:16px">Hætta við</button>' : ''}`;
+  }
+
+  document.getElementById('song-area').addEventListener('click', e => {
+    const t = e.target.closest('button');
+    if (!t) return;
+    if (t.dataset.cat) { songFilter = t.dataset.cat; renderSongs(); return; }
+    if (t.dataset.song) {
+      store.set('tsn-song', t.dataset.song);
+      browsing = false;
+      renderWeeks(); renderLesson();
+      toast(`Þú valdir „${chosenSong().title}“. Kennarinn sér valið þitt.`);
+      return;
+    }
+    if ('browse' in t.dataset) { browsing = true; renderLesson(); return; }
+    if ('close' in t.dataset) { browsing = false; renderLesson(); return; }
+    if ('suggest' in t.dataset) { toast('Skrifaðu kennaranum undir Skilaboð hvaða lag þig langar að læra.'); }
+  });
+
   document.getElementById('weeks').addEventListener('click', e => {
     const b = e.target.closest('.week-tile');
     if (!b || b.disabled) return;
     selected = +b.dataset.week;
+    browsing = false;
     renderWeeks(); renderLesson();
     document.getElementById('lota').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });

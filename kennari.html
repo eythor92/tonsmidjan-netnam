@@ -25,6 +25,7 @@
       <a href="#yfirferd">Til yfirferðar <span class="badge" id="nav-count">0</span></a>
       <a href="#nemendur">Nemendur</a>
       <a href="#lotur">Lotur</a>
+      <a href="#lagasafn">Lagasafn</a>
       <a href="skilabod.html">Skilaboð</a>
     </nav>
     <div class="sidebar-foot"><span id="who">Stefán</span> · Píanó<br><button class="link-btn" id="logout" style="color:#B7C4C1;font-weight:500">Útskrá</button></div>
@@ -65,6 +66,13 @@
       <div class="panel-head"><h2>Námskeið og lotur</h2><button class="btn btn-outline btn-sm" id="new-lesson">+ Ný lota</button></div>
       <div id="lessons" class="lesson-admin"></div>
     </section>
+
+    <section class="panel" id="lagasafn">
+      <div class="panel-head"><h2>Lagasafn</h2><button class="btn btn-primary btn-sm" id="new-song">+ Bæta við lagi</button></div>
+      <p class="muted" style="font-size:15px">Lögin sem nemendur geta valið í viku 4. Hvert lag þarf kennslumyndband áður en það birtist nemendum.</p>
+      <div class="tabs" role="tablist" aria-label="Námskeið" id="song-tabs"></div>
+      <ul class="song-list" id="song-admin"></ul>
+    </section>
   </main>
 </div>
 
@@ -97,6 +105,26 @@
   </form>
 </dialog>
 
+<dialog id="song-dlg">
+  <form method="dialog" class="dialog-inner" id="song-form">
+    <h2 style="font-size:22px">Nýtt lag í lagasafnið</h2>
+    <label>Heiti lags <input type="text" id="sf-title" required></label>
+    <label>Uppruni eða höfundur <input type="text" id="sf-origin" placeholder="T.d. Íslenskt þjóðlag"></label>
+    <label>Námskeið
+      <select id="sf-course"><option value="0">Grunnnámskeið</option><option value="1">Námskeið 2</option><option value="2">Námskeið 3</option></select>
+    </label>
+    <label>Erfiðleikastig
+      <select id="sf-level"><option value="1">1 – Létt</option><option value="2">2 – Miðlungs</option><option value="3">3 – Krefjandi</option></select>
+    </label>
+    <label>Kennslumyndband <input type="file" id="sf-video" accept="video/*"></label>
+    <label>Nótur (PDF) <input type="file" accept="application/pdf"></label>
+    <div class="dialog-actions">
+      <button class="btn btn-outline btn-sm" value="cancel" formnovalidate>Hætta við</button>
+      <button class="btn btn-primary btn-sm" value="save">Vista lag</button>
+    </div>
+  </form>
+</dialog>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -111,7 +139,7 @@
 
   const queue = [
     { name: 'Bjarki Jónsson',     lota: 'Grunnnámskeið · Lota 2: Fimm fingra staða',   sent: 'í gær kl. 19:40',  len: '1:12', note: 'Fyrsta upptakan mín! Fjórði fingurinn er svolítið veikur.' },
-    { name: 'Sara Helgadóttir',   lota: 'Námskeið 2 · Lota 1: Fyrsta lagið',        sent: 'í gær kl. 21:05',  len: '2:40', note: '' },
+    { name: 'Sara Helgadóttir',   lota: 'Námskeið 2 · Lota 1: Nótnalestur',        sent: 'í gær kl. 21:05',  len: '2:40', note: '' },
     { name: 'Anna Sigurðardóttir',lota: 'Grunnnámskeið · Lota 3: Báðar hendur saman',  sent: 'í dag kl. 08:15', len: '1:58', note: 'Vinstri höndin fer alltaf á undan. Hvernig laga ég það?' },
   ];
 
@@ -119,9 +147,9 @@
     { name: 'Anna Sigurðardóttir', lota: 3, last: 0 },
     { name: 'Bjarki Jónsson',      lota: 2, last: 1 },
     { name: 'Sara Helgadóttir',    lota: 5, last: 1 },
-    { name: 'Guðrún Ólafsdóttir',  lota: 4, last: 2 },
+    { name: 'Guðrún Ólafsdóttir',  lota: 4, last: 2, song: 'krummi' },
     { name: 'Hilmar Pétursson',    lota: 1, last: 6 },
-    { name: 'Katla Björnsdóttir',  lota: 7, last: 0 },
+    { name: 'Katla Björnsdóttir',  lota: 8, last: 0, song: 'sprengisandur' },
     { name: 'Ólafur Einarsson',    lota: 2, last: 9 },
   ];
 
@@ -130,16 +158,31 @@
     { c: 0, n: 1, title: 'Að kynnast hljómborðinu', status: 'Birt', free: true },
     { c: 0, n: 2, title: 'Fimm fingra staða',       status: 'Birt' },
     { c: 0, n: 3, title: 'Báðar hendur saman',      status: 'Birt' },
-    { c: 0, n: 4, title: 'Nótnalestur',             status: 'Birt' },
-    { c: 1, n: 1, title: 'Fyrsta lagið',            status: 'Birt' },
+    { c: 0, n: 4, title: 'Lagið þitt',              status: 'Birt', song: true },
+    { c: 1, n: 1, title: 'Nótnalestur',             status: 'Birt' },
     { c: 1, n: 2, title: 'Grunnhljómar',            status: 'Birt' },
     { c: 1, n: 3, title: 'Undirleikur',             status: 'Birt' },
-    { c: 1, n: 4, title: 'Lag með undirleik',       status: 'Drög' },
+    { c: 1, n: 4, title: 'Lagið þitt',              status: 'Birt', song: true },
     { c: 2, n: 1, title: 'Tónstigar og fingrasetning', status: 'Drög' },
     { c: 2, n: 2, title: 'Fleiri hljómar',          status: 'Drög' },
     { c: 2, n: 3, title: 'Hrynur í vinstri hendi',  status: 'Drög' },
-    { c: 2, n: 4, title: 'Lokaverkefni',            status: 'Drög' },
+    { c: 2, n: 4, title: 'Lagið þitt (lokaverkefni)', status: 'Drög', song: true },
   ];
+  const SONGS = [
+    { id: 'gamli-noi',     c: 0, title: 'Gamli Nói',                  origin: 'Íslenskt þjóðlag',     level: 1, video: true },
+    { id: 'krummi',        c: 0, title: 'Krummi svaf í klettagjá',    origin: 'Íslenskt þjóðlag',     level: 2, video: true },
+    { id: 'bi-bi',         c: 0, title: 'Bí bí og blaka',             origin: 'Íslensk vögguvísa',    level: 1, video: true },
+    { id: 'blika',         c: 0, title: 'Blika, blika litla stjarna', origin: 'Franskt þjóðlag',      level: 1, video: true },
+    { id: 'odurinn',       c: 0, title: 'Óðurinn til gleðinnar',      origin: 'Ludwig van Beethoven', level: 2, video: true },
+    { id: 'jolin',         c: 0, title: 'Heims um ból',               origin: 'Franz Gruber',         level: 2, video: true },
+    { id: 'sprengisandur', c: 1, title: 'Á Sprengisandi',             origin: 'Sigvaldi Kaldalóns',   level: 2, video: true },
+    { id: 'canon',         c: 1, title: 'Kanón í D (einfölduð)',      origin: 'Johann Pachelbel',     level: 2, video: false },
+    { id: 'elise',         c: 2, title: 'Für Elise (fyrsti hluti)',   origin: 'Ludwig van Beethoven', level: 3, video: false },
+    { id: 'vatnsenda',     c: 2, title: 'Vísur Vatnsenda-Rósu',       origin: 'Íslenskt þjóðlag',     level: 3, video: false },
+  ];
+  let songTab = 0;
+  const songName = id => (SONGS.find(x => x.id === id) || {}).title;
+
   // Staða nemanda: heildarlota 1–12 → námskeið og lota innan þess
   const where = n => ({ c: Math.floor((n - 1) / 4), l: ((n - 1) % 4) + 1 });
 
@@ -178,7 +221,7 @@
       const nudge = s.last >= 5;
       return `<tr>
         <th scope="row"><span class="cell-name"><span class="avatar initials sm">${esc(initials(s.name))}</span>${esc(s.name)}</span></th>
-        <td><div class="cell-prog"><div class="progress"><span style="width:${where(s.lota).l / 4 * 100}%"></span></div><span class="muted">${COURSES[where(s.lota).c]} · Lota ${where(s.lota).l} af 4</span></div></td>
+        <td><div class="cell-prog"><div class="progress"><span style="width:${where(s.lota).l / 4 * 100}%"></span></div><span class="muted">${COURSES[where(s.lota).c]} · ${where(s.lota).l === 4 ? (s.song ? 'Lagið: ' + esc(songName(s.song)) : 'Lagaval: ekki valið') : 'Lota ' + where(s.lota).l + ' af 4'}</span></div></td>
         <td>${lastText(s.last)}</td>
         <td>${nudge ? '<span class="status warn">Þarf hvatningu</span>' : '<span class="status ok">Á góðri leið</span>'}</td>
         <td><button class="link-btn" data-msg="${esc(s.name)}">${nudge ? 'Senda hvatningu' : 'Skilaboð'}</button></td>
@@ -198,7 +241,7 @@
         <div class="lesson-row">
           <span class="n">${l.n}</span>
           <div><strong>${esc(l.title)}</strong>${l.free ? '<span class="free-tag">Ókeypis prufa</span>' : ''}
-            <div class="muted" style="font-size:14px">Vika ${l.n} · Myndband · Nótur · Æfingaplan</div></div>
+            <div class="muted" style="font-size:14px">${l.song ? `Vika ${l.n} · Lagaval · ${SONGS.filter(x => x.c === ci && x.video).length} lög tilbúin` : `Vika ${l.n} · Myndband · Nótur · Æfingaplan`}</div></div>
           <span class="status ${l.status === 'Birt' ? 'ok' : 'draft'}">${l.status}</span>
           <button class="link-btn" data-edit="${name}, lota ${l.n}">Breyta</button>
         </div>`).join('')}
@@ -245,7 +288,39 @@
     current = null;
   });
 
-  renderQueue(); renderStudents(); renderLessons();
+  function renderSongAdmin() {
+    document.getElementById('song-tabs').innerHTML = COURSES.map((c, i) =>
+      `<button role="tab" class="tab" aria-selected="${i === songTab}" data-songtab="${i}">${c} (${SONGS.filter(x => x.c === i).length})</button>`).join('');
+    const dots = n => `<span class="level" aria-label="Erfiðleikastig ${n} af 3">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`;
+    document.getElementById('song-admin').innerHTML = SONGS.filter(x => x.c === songTab).map(x => {
+      const by = students.filter(s => s.song === x.id).map(s => s.name.split(' ')[0]);
+      return `<li class="song-row">
+        <div class="song-main"><strong>${esc(x.title)}</strong><span class="muted">${esc(x.origin)}${by.length ? ' · Valið af ' + by.join(', ') : ''}</span></div>
+        ${dots(x.level)}
+        <span class="status ${x.video ? 'ok' : 'warn'}">${x.video ? 'Myndband tilbúið' : 'Vantar myndband'}</span>
+        <button class="link-btn" data-edit="${esc(x.title)}">Breyta</button>
+      </li>`;
+    }).join('') || '<li class="muted" style="padding:12px 0">Engin lög enn.</li>';
+  }
+  document.getElementById('song-tabs').addEventListener('click', e => {
+    const t = e.target.closest('[data-songtab]'); if (!t) return;
+    songTab = +t.dataset.songtab; renderSongAdmin();
+  });
+  const songDlg = document.getElementById('song-dlg');
+  document.getElementById('new-song').addEventListener('click', () => { document.getElementById('sf-course').value = songTab; songDlg.showModal(); });
+  songDlg.addEventListener('close', () => {
+    const title = document.getElementById('sf-title').value.trim();
+    if (songDlg.returnValue === 'save' && title) {
+      const c = +document.getElementById('sf-course').value;
+      SONGS.push({ id: 'nytt-' + Date.now(), c, title, origin: document.getElementById('sf-origin').value.trim() || 'Óskráður uppruni',
+        level: +document.getElementById('sf-level').value, video: !!document.getElementById('sf-video').files.length });
+      songTab = c; renderSongAdmin(); renderLessons();
+      toast(`„${title}“ er komið í lagasafnið (${COURSES[c]})`);
+    }
+    document.getElementById('song-form').reset();
+  });
+
+  renderQueue(); renderStudents(); renderLessons(); renderSongAdmin();
 </script>
 </body>
 </html>

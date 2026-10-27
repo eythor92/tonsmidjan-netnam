@@ -350,3 +350,31 @@ dialog::backdrop { background: rgba(15,26,28,.5); }
 .week-tile.current .week-state { color: var(--accent-hover); font-weight: 600; }
 .week-tile.done .week-state { color: var(--accent); }
 .unlock-note { font-size: 15px; color: var(--ink-2); background: var(--soft); padding: 12px 14px; border-radius: 10px; }
+
+/* Lagaval í viku 4 */
+.video-frame { position: relative; }
+.video-lock { position: absolute; inset: auto 0 0 0; padding: 10px 14px; background: rgba(15,26,28,.85); color: #fff; font-size: 14px; font-weight: 600; text-align: center; }
+.week-tile.song.locked { cursor: pointer; border-style: dashed; }
+.week-tile.song .week-state { color: var(--accent-hover); font-weight: 600; }
+.song-area { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 4px; }
+.song-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.song-head h3 { font-size: 18px; }
+.song-head .muted { font-size: 14px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tab { font: 600 14px var(--body); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.song-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.song-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+.song-row:first-child { border-top: 0; }
+.song-row.picked .song-main strong { color: var(--accent); }
+.song-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.song-main .muted { font-size: 13px; }
+.level { display: inline-flex; gap: 3px; flex: none; }
+.level i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.level i.on { background: var(--amber); }
+.song-row .btn { flex: none; min-width: 84px; }
+.song-chosen { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--accent-soft); padding: 14px 16px; border-radius: 12px; flex-wrap: wrap; }
+.song-chosen strong { display: block; font: 700 18px var(--display); }
+.lesson.song { border-color: var(--amber); background: #FFF8EC; }
+.lesson.song .free-tag { background: #FCEBD0; color: #7A4A06; }
+[hidden] { display: none !important; }
