@@ -394,3 +394,44 @@ dialog::backdrop { background: rgba(15,26,28,.5); }
 /* Verð: besti kosturinn */
 .plan.best { border: 2px solid var(--accent); position: relative; }
 .best-tag { position: absolute; top: -14px; left: 32px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+
+/* Námskeiðaskrá eftir getustigum */
+.fit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+.fit-card { text-align: left; font: inherit; color: var(--ink); background: var(--ground); border: 1.5px solid var(--line); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; transition: border-color .15s, background .15s; }
+.fit-card:hover { border-color: var(--accent); background: var(--accent-soft); }
+.fit-card strong { font: 700 18px/1.3 var(--display); }
+.fit-level { font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--accent); }
+.fit-go { margin-top: auto; padding-top: 8px; font-size: 14px; font-weight: 600; color: var(--accent); }
+.level-tabs { margin-bottom: 8px; }
+.level-tabs .tab { font-size: 15px; padding: 10px 16px; }
+.tab-count { display: inline-block; min-width: 20px; margin-left: 4px; font-size: 12px; padding: 1px 6px; border-radius: 999px; background: var(--soft); color: var(--muted); }
+.tab[aria-selected="true"] .tab-count { background: rgba(255,255,255,.2); color: #fff; }
+.level-intro { color: var(--ink-2); margin: 8px 0 20px; }
+.catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.course-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+.course-card h3 { font-size: 22px; }
+.course-card.soon { background: var(--ground); }
+.course-card .btn { margin-top: auto; align-self: flex-start; }
+.course-card .btn:disabled { opacity: .6; cursor: not-allowed; }
+.course-card-top { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.level-badge { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+.level-badge.l0 { background: var(--accent-soft); color: var(--accent-hover); }
+.level-badge.l1 { background: #DCE9F7; color: #1D4E89; }
+.level-badge.l2 { background: #FCEBD0; color: #7A4A06; }
+.level-badge.l3 { background: #F1DDE6; color: #7A2650; }
+.soon-tag { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--soft); color: var(--muted); }
+.week-list { list-style: none; margin: 4px 0 8px; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+.week-list li { display: flex; gap: 10px; }
+.week-list span { flex: none; width: 56px; font-size: 13px; font-weight: 600; color: var(--muted); padding-top: 1px; }
+.week-list li.song-wk { color: #7A4A06; font-weight: 600; }
+
+.next-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.next-card { display: flex; flex-direction: column; gap: 6px; padding: 18px; border: 1.5px solid var(--line); border-radius: 14px; text-decoration: none; color: var(--ink); transition: border-color .15s; }
+.next-card:hover { border-color: var(--accent); color: var(--ink); }
+.next-card .level-badge { align-self: flex-start; }
+.next-card strong { font: 700 17px var(--display); }
+.next-card .muted { font-size: 14px; }
+
+.cell-course { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--ink); font-size: 14px; flex-wrap: wrap; }
+.cell-prog { min-width: 200px; }
+.course-admin-row { grid-template-columns: 1fr auto auto; }

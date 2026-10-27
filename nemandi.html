@@ -29,7 +29,7 @@
   <main class="app-main">
     <div class="app-top">
       <div>
-        <div class="muted">Píanó · Grunnnámskeið</div>
+        <div class="muted">Píanó · Fyrstu skrefin <span class="level-badge l0" style="margin-left:6px">Grunnur</span></div>
         <h1>Góðan daginn, [Nafn]</h1>
       </div>
       <button class="btn btn-primary" id="open-upload">
@@ -91,6 +91,11 @@
         </div>
       </div>
     </section>
+    <section class="panel" id="naest">
+      <div class="panel-head"><h2>Hvað viltu læra næst?</h2><a href="piano.html#namskeid" style="font-size:15px;font-weight:600">Öll námskeið</a></div>
+      <p class="muted" style="font-size:15px">Þegar þú klárar þetta námskeið velurðu sjálf(ur) hvað kemur næst. Hér eru tillögur sem passa við þig.</p>
+      <div class="next-grid" id="next"></div>
+    </section>
   </main>
 </div>
 
@@ -115,6 +120,20 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="namskeid.js"></script>
+<script>
+  // Tillögur að næsta námskeiði
+  (() => {
+    const { LEVELS, COURSES } = window.TSN;
+    const picks = ['notnalestur', 'fingrasetning', 'fyrstu-hljomarnir'].map(id => COURSES.find(c => c.id === id));
+    document.getElementById('next').innerHTML = picks.map(c => `
+      <a class="next-card" href="piano.html#namskeid">
+        <span class="level-badge l${c.level}">${LEVELS[c.level].name}</span>
+        <strong>${c.title}</strong>
+        <span class="muted">${c.desc}</span>
+      </a>`).join('');
+  })();
+</script>
 <script>
   // ATH: Þetta er sýnishorn. Ekkert er sent á netþjón; staðan geymist aðeins í þessum vafra.
   const store = {
@@ -151,7 +170,7 @@
       plan: ['Horfa á kennslumyndbandið fyrir lagið', '5 mín: Hægri hönd ein, hægt', '5 mín: Vinstri hönd ein', '10 mín: Báðar hendur saman og senda lokaupptöku'] },
   ];
 
-  // Lagalisti kennarans fyrir grunnnámskeiðið. Hvert lag hefur sitt kennslumyndband.
+  // Lagalisti kennarans fyrir getustigið Grunnur. Hvert lag hefur sitt kennslumyndband.
   const SONGS = [
     { id: 'birds',    title: 'Birds of a Feather',      origin: 'Billie Eilish',               cat: 'Vinsælt núna', level: 1, len: '11 mín' },
     { id: 'espresso', title: 'Espresso',                origin: 'Sabrina Carpenter',           cat: 'Vinsælt núna', level: 2, len: '12 mín' },
@@ -205,7 +224,7 @@
     if (unlockedCount < WEEKS.length) {
       note.innerHTML = `<strong>Vika ${unlockedCount + 1} opnast sjálfkrafa ${fmt(opensOn(unlockedCount))}</strong>, eða fyrr ef kennarinn opnar hana eftir að hafa farið yfir upptökuna þína.`;
     } else {
-      note.innerHTML = '<strong>Allar vikur grunnnámskeiðsins eru opnar.</strong> Þegar þú ert tilbúin(n) heldurðu áfram í Námskeið 2.';
+      note.innerHTML = '<strong>Allar vikur námskeiðsins eru opnar.</strong> Veldu næsta námskeið hér fyrir neðan þegar þú ert tilbúin(n).';
     }
     document.getElementById('access').textContent = `Aðgangur til ${fmtLong(new Date(start.getTime() + ACCESS_DAYS * DAY))}`;
 

@@ -34,7 +34,7 @@
   <main class="app-main" id="yfirlit">
     <div class="app-top">
       <div>
-        <div class="muted">Píanó · 3 námskeið</div>
+        <div class="muted">Píanó · 15 námskeið á 4 getustigum</div>
         <h1>Sæll, <span id="hello">Stefán</span></h1>
       </div>
       <span class="demo-note">Sýnishorn með tilbúnum gögnum</span>
@@ -63,7 +63,7 @@
     </section>
 
     <section class="panel" id="lotur">
-      <div class="panel-head"><h2>Námskeið og lotur</h2><button class="btn btn-outline btn-sm" id="new-lesson">+ Ný lota</button></div>
+      <div class="panel-head"><h2>Námskeið</h2><button class="btn btn-outline btn-sm" id="new-lesson">+ Nýtt námskeið</button></div>
       <div id="lessons" class="lesson-admin"></div>
     </section>
 
@@ -110,8 +110,8 @@
     <h2 style="font-size:22px">Nýtt lag í lagasafnið</h2>
     <label>Heiti lags <input type="text" id="sf-title" required></label>
     <label>Uppruni eða höfundur <input type="text" id="sf-origin" placeholder="T.d. Íslenskt þjóðlag"></label>
-    <label>Námskeið
-      <select id="sf-course"><option value="0">Grunnnámskeið</option><option value="1">Námskeið 2</option><option value="2">Námskeið 3</option></select>
+    <label>Getustig
+      <select id="sf-course"><option value="0">Grunnur</option><option value="1">Auðvelt</option><option value="2">Miðlungs</option><option value="3">Lengra komnir</option></select>
     </label>
     <label>Erfiðleikastig
       <select id="sf-level"><option value="1">1 – Létt</option><option value="2">2 – Miðlungs</option><option value="3">3 – Krefjandi</option></select>
@@ -127,6 +127,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="namskeid.js"></script>
 <script>
   // ATH: Sýnishorn. Gögnin eru tilbúin og ekkert er vistað á netþjóni.
   const who = (() => { try { return sessionStorage.getItem('tsn-kennari') || 'Stefán'; } catch { return 'Stefán'; } })();
@@ -137,37 +138,30 @@
     location.href = 'innskraning.html';
   });
 
+  const { LEVELS, COURSES: CATALOG, SONG_WEEK } = window.TSN;
+  const course = id => CATALOG.find(c => c.id === id);
+  const weekTitle = (id, w) => w === 4 ? SONG_WEEK : course(id).weeks[w - 1];
+
   const queue = [
-    { name: 'Bjarki Jónsson',     lota: 'Grunnnámskeið · Lota 2: Fimm fingra staða',   sent: 'í gær kl. 19:40',  len: '1:12', note: 'Fyrsta upptakan mín! Fjórði fingurinn er svolítið veikur.' },
-    { name: 'Sara Helgadóttir',   lota: 'Námskeið 2 · Lota 1: Nótnalestur',        sent: 'í gær kl. 21:05',  len: '2:40', note: '' },
-    { name: 'Anna Sigurðardóttir',lota: 'Grunnnámskeið · Lota 3: Báðar hendur saman',  sent: 'í dag kl. 08:15', len: '1:58', note: 'Vinstri höndin fer alltaf á undan. Hvernig laga ég það?' },
+    { name: 'Bjarki Jónsson',      c: 'fyrstu-skrefin',      w: 2, sent: 'í gær kl. 19:40',  len: '1:12', note: 'Fyrsta upptakan mín! Fjórði fingurinn er svolítið veikur.' },
+    { name: 'Sara Helgadóttir',    c: 'fyrstu-hljomarnir',   w: 1, sent: 'í gær kl. 21:05',  len: '2:40', note: '' },
+    { name: 'Anna Sigurðardóttir', c: 'fyrstu-skrefin',      w: 3, sent: 'í dag kl. 08:15',  len: '1:58', note: 'Vinstri höndin fer alltaf á undan. Hvernig laga ég það?' },
   ];
+  queue.forEach(q => q.lota = `${course(q.c).title} · Vika ${q.w}: ${weekTitle(q.c, q.w)}`);
 
   const students = [
-    { name: 'Anna Sigurðardóttir', lota: 3, last: 0 },
-    { name: 'Bjarki Jónsson',      lota: 2, last: 1 },
-    { name: 'Sara Helgadóttir',    lota: 5, last: 1 },
-    { name: 'Guðrún Ólafsdóttir',  lota: 4, last: 2, song: 'golden' },
-    { name: 'Hilmar Pétursson',    lota: 1, last: 6 },
-    { name: 'Katla Björnsdóttir',  lota: 8, last: 0, song: 'flowers' },
-    { name: 'Ólafur Einarsson',    lota: 2, last: 9 },
+    { name: 'Anna Sigurðardóttir', c: 'fyrstu-skrefin',      w: 3, last: 0 },
+    { name: 'Bjarki Jónsson',      c: 'fyrstu-skrefin',      w: 2, last: 1 },
+    { name: 'Sara Helgadóttir',    c: 'fyrstu-hljomarnir',   w: 1, last: 1 },
+    { name: 'Guðrún Ólafsdóttir',  c: 'notnalestur',         w: 4, last: 2, song: 'golden' },
+    { name: 'Hilmar Pétursson',    c: 'fingrasetning',       w: 1, last: 6 },
+    { name: 'Katla Björnsdóttir',  c: 'einfaldir-tonstigar', w: 4, last: 0, song: 'flowers' },
+    { name: 'Ólafur Einarsson',    c: 'fyrstu-skrefin',      w: 2, last: 9 },
   ];
 
-  const COURSES = ['Grunnnámskeið', 'Námskeið 2', 'Námskeið 3'];
-  const lessons = [
-    { c: 0, n: 1, title: 'Að kynnast hljómborðinu', status: 'Birt', free: true },
-    { c: 0, n: 2, title: 'Fimm fingra staða',       status: 'Birt' },
-    { c: 0, n: 3, title: 'Báðar hendur saman',      status: 'Birt' },
-    { c: 0, n: 4, title: 'Lagið þitt',              status: 'Birt', song: true },
-    { c: 1, n: 1, title: 'Nótnalestur',             status: 'Birt' },
-    { c: 1, n: 2, title: 'Grunnhljómar',            status: 'Birt' },
-    { c: 1, n: 3, title: 'Undirleikur',             status: 'Birt' },
-    { c: 1, n: 4, title: 'Lagið þitt',              status: 'Birt', song: true },
-    { c: 2, n: 1, title: 'Tónstigar og fingrasetning', status: 'Drög' },
-    { c: 2, n: 2, title: 'Fleiri hljómar',          status: 'Drög' },
-    { c: 2, n: 3, title: 'Hrynur í vinstri hendi',  status: 'Drög' },
-    { c: 2, n: 4, title: 'Lagið þitt (lokaverkefni)', status: 'Drög', song: true },
-  ];
+  // Myndbönd sem eru tilbúin fyrir hvert námskeið (af 3 æfingavikum)
+  const videosReady = { 'fyrstu-skrefin': 3, 'notnalestur': 3, 'fingrasetning': 3, 'fyrstu-hljomarnir': 3, 'einfaldir-tonstigar': 3, 'popp-undirleikur': 1, 'taktur': 0 };
+
   const SONGS = [
     { id: 'birds',    c: 0, title: 'Birds of a Feather',      origin: 'Billie Eilish',            level: 1, video: true },
     { id: 'espresso', c: 0, title: 'Espresso',                origin: 'Sabrina Carpenter',        level: 2, video: true },
@@ -183,14 +177,14 @@
     { id: 'someone',  c: 1, title: 'Someone You Loved',       origin: 'Lewis Capaldi',            level: 2, video: false },
     { id: 'sprengi',  c: 1, title: 'Á Sprengisandi',          origin: 'Sigvaldi Kaldalóns',       level: 2, video: true },
     { id: 'river',    c: 2, title: 'River Flows in You',      origin: 'Yiruma',                   level: 3, video: false },
-    { id: 'clocks',   c: 2, title: 'Clocks',                  origin: 'Coldplay',                 level: 3, video: false },
+    { id: 'clocks',   c: 3, title: 'Clocks',                  origin: 'Coldplay',                 level: 3, video: false },
+    { id: 'experience', c: 3, title: 'Experience',            origin: 'Ludovico Einaudi',         level: 3, video: false },
     { id: 'elise',    c: 2, title: 'Für Elise (fyrsti hluti)', origin: 'Ludwig van Beethoven',    level: 3, video: false },
   ];
   let songTab = 0;
   const songName = id => (SONGS.find(x => x.id === id) || {}).title;
 
-  // Staða nemanda: heildarlota 1–12 → námskeið og lota innan þess
-  const where = n => ({ c: Math.floor((n - 1) / 4), l: ((n - 1) % 4) + 1 });
+  const COURSES = LEVELS.map(l => l.name); // flipar í lagasafni = getustig
 
   const esc = s => { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
   const initials = n => n.split(' ').map(w => w[0]).slice(0, 2).join('');
@@ -227,7 +221,7 @@
       const nudge = s.last >= 5;
       return `<tr>
         <th scope="row"><span class="cell-name"><span class="avatar initials sm">${esc(initials(s.name))}</span>${esc(s.name)}</span></th>
-        <td><div class="cell-prog"><div class="progress"><span style="width:${where(s.lota).l / 4 * 100}%"></span></div><span class="muted">${COURSES[where(s.lota).c]} · ${where(s.lota).l === 4 ? (s.song ? 'Lagið: ' + esc(songName(s.song)) : 'Lagaval: ekki valið') : 'Lota ' + where(s.lota).l + ' af 4'}</span></div></td>
+        <td><div class="cell-prog"><span class="cell-course">${esc(course(s.c).title)} <span class="level-badge l${course(s.c).level}">${LEVELS[course(s.c).level].name}</span></span><div class="progress"><span style="width:${s.w / 4 * 100}%"></span></div><span class="muted">${s.w === 4 ? (s.song ? 'Vika 4 · Lagið: ' + esc(songName(s.song)) : 'Vika 4 · Lagaval: ekki valið') : 'Vika ' + s.w + ' af 4'}</span></div></td>
         <td>${lastText(s.last)}</td>
         <td>${nudge ? '<span class="status warn">Þarf hvatningu</span>' : '<span class="status ok">Á góðri leið</span>'}</td>
         <td><button class="link-btn" data-msg="${esc(s.name)}">${nudge ? 'Senda hvatningu' : 'Skilaboð'}</button></td>
@@ -240,17 +234,20 @@
   }
 
   function renderLessons() {
-    document.getElementById('lessons').innerHTML = COURSES.map((name, ci) => `
+    document.getElementById('lessons').innerHTML = LEVELS.map((lv, li) => `
       <div class="lesson-group">
-        <div class="lesson-group-head"><strong>${name}</strong><span class="muted">4 vikur · 4 lotur</span></div>
-        ${lessons.filter(l => l.c === ci).map(l => `
-        <div class="lesson-row">
-          <span class="n">${l.n}</span>
-          <div><strong>${esc(l.title)}</strong>${l.free ? '<span class="free-tag">Ókeypis prufa</span>' : ''}
-            <div class="muted" style="font-size:14px">${l.song ? `Vika ${l.n} · Lagaval · ${SONGS.filter(x => x.c === ci && x.video).length} lög tilbúin` : `Vika ${l.n} · Myndband · Nótur · Æfingaplan`}</div></div>
-          <span class="status ${l.status === 'Birt' ? 'ok' : 'draft'}">${l.status}</span>
-          <button class="link-btn" data-edit="${name}, lota ${l.n}">Breyta</button>
-        </div>`).join('')}
+        <div class="lesson-group-head"><strong>${lv.name}</strong><span class="muted">${CATALOG.filter(c => c.level === li).length} námskeið</span></div>
+        ${CATALOG.filter(c => c.level === li).map(c => {
+          const n = students.filter(s => s.c === c.id).length;
+          const v = videosReady[c.id] || 0;
+          const songs = SONGS.filter(x => x.c === li && x.video).length;
+          return `<div class="lesson-row course-admin-row">
+          <div><strong>${esc(c.title)}</strong>${c.free ? '<span class="free-tag">Fyrsta vika ókeypis</span>' : ''}
+            <div class="muted" style="font-size:14px">${v} af 3 æfingamyndböndum · ${songs} lög á lagalista${n ? ` · ${n} ${n === 1 ? 'nemandi' : 'nemendur'}` : ''}</div></div>
+          <span class="status ${c.status === 'opid' ? 'ok' : 'draft'}">${c.status === 'opid' ? 'Opið' : v ? 'Í vinnslu' : 'Ekki hafið'}</span>
+          <button class="link-btn" data-edit="${esc(c.title)}">Breyta</button>
+        </div>`;
+        }).join('')}
       </div>`).join('');
   }
 
@@ -277,7 +274,7 @@
     const ed = e.target.closest('[data-edit]');
     if (ed) { toast(`Hér myndi opnast ritill fyrir ${ed.dataset.edit}`); return; }
   });
-  document.getElementById('new-lesson').addEventListener('click', () => toast('Hér myndi opnast ritill fyrir nýja lotu'));
+  document.getElementById('new-lesson').addEventListener('click', () => toast('Hér myndi opnast ritill fyrir nýtt námskeið'));
 
   dlg.addEventListener('close', () => {
     if (dlg.returnValue === 'send' && current !== null) {
@@ -285,10 +282,10 @@
       const nextOpened = document.getElementById('r-next').checked;
       if (nextOpened) {
         const s = students.find(s => s.name === q.name);
-        if (s && s.lota < 12) s.lota++;
+        if (s && s.w < 4) s.w++;
       }
       renderQueue(); renderStudents();
-      toast(`Endurgjöf send til ${q.name}${nextOpened ? ' og næsta lota opnuð' : ''}`);
+      toast(`Endurgjöf send til ${q.name}${nextOpened ? ' og næsta vika opnuð' : ''}`);
     }
     document.getElementById('review-form').reset();
     current = null;

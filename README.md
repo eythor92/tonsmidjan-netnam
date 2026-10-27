@@ -5,7 +5,8 @@ Drög að vefsíðu fyrir netnám Tónsmiðju Suðurlands: kennsla á myndbandi,
 Þetta er sýnishorn. Innskráning, upptökur og skilaboð eru ekki tengd netþjóni.
 
 - `index.html` – forsíða
-- `piano.html` – píanónámskeið
+- `piano.html` – píanó: 15 námskeið á 4 getustigum
+- `namskeid.js` – námskeiðaskráin (breyttu námskeiðum hér)
 - `hvernig.html` – hvernig netnámið virkar
 - `verd.html` – verð og spurningar
 - `nemandi.html` – svæði nemanda (sýnishorn)
