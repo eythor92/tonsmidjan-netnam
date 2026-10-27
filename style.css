@@ -435,3 +435,9 @@ dialog::backdrop { background: rgba(15,26,28,.5); }
 .cell-course { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--ink); font-size: 14px; flex-wrap: wrap; }
 .cell-prog { min-width: 200px; }
 .course-admin-row { grid-template-columns: 1fr auto auto; }
+
+/* YouTube-myndband á forsíðu */
+.video-frame.yt { background-size: cover; background-position: center; }
+.video-frame.yt::before { content: ""; position: absolute; inset: 0; background: rgba(15,26,28,.25); }
+.video-frame.yt .play { position: relative; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }

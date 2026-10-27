@@ -48,15 +48,13 @@
 
     <div class="hero-visual">
       <div class="video-card">
-        <div class="video-frame">
-          <span class="label">[Mynd úr kennslumyndbandi]</span>
-          <button class="play" aria-label="Spila sýnishorn">
+        <div class="video-frame yt" id="hero-video" data-yt="CpXTp82a9oU" style="background-image:url('https://i.ytimg.com/vi/CpXTp82a9oU/hqdefault.jpg')">
+          <button class="play" aria-label="Spila myndband">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="#0F1A1C" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
           </button>
         </div>
         <div class="video-meta">
-          <div><small>Píanó · Lota 3</small><strong>Báðar hendur saman</strong></div>
-          <small>12 mín</small>
+          <div><small>Myndband</small><strong>Smá innblástur áður en þú byrjar</strong></div>
         </div>
       </div>
       <div class="feedback-bubble">
@@ -108,6 +106,17 @@
 </footer>
 
 <script>
+  // Myndband á forsíðu: hleður YouTube bara þegar ýtt er á spila
+  const hv = document.getElementById('hero-video');
+  hv.querySelector('.play').addEventListener('click', () => {
+    const f = document.createElement('iframe');
+    f.src = `https://www.youtube-nocookie.com/embed/${hv.dataset.yt}?autoplay=1&rel=0`;
+    f.title = 'Myndband';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    hv.replaceChildren(f);
+  });
+
   // Valmynd í síma
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.getElementById('main-nav');
