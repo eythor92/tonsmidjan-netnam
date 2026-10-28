@@ -10,7 +10,9 @@ Drög að vefsíðu fyrir netnám Tónsmiðju Suðurlands: kennsla á myndbandi,
 - `hvernig.html` – hvernig netnámið virkar
 - `verd.html` – verð
 - `spurningar.html` – algengar spurningar
-- `nemandi.html` – svæði nemanda (sýnishorn)
+- `nemandi.html` – svæði nemanda: æfing kvöldsins, taktmælir, myndbandsverkfæri, upptaka, framfarir og áminning (sýnishorn)
+- `aefing.js` – kóðinn fyrir æfingu kvöldsins og verkfærin
+- `media/demo-lota.mp4` – sýnishorn af kennslumyndbandi
 - `skilabod.html` – samtal við kennara (sýnishorn)
 - `innskraning.html` – innskráning: veldu notanda (Stefán, Eyþór eða nemandi)
 - `kennari.html` – kennarasvæði (sýnishorn)

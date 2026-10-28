@@ -18,9 +18,10 @@
     </a>
     <nav class="side-nav" aria-label="Valmynd nemanda">
       <a class="active" href="nemandi.html">Yfirlit</a>
-      <a href="piano.html#namskeid-1">Lotur</a>
-      <a href="#dagbok">Æfingadagbók</a>
-      <a href="#endurgjof">Upptökur mínar</a>
+      <a href="#kvold">Æfing kvöldsins</a>
+      <a href="#lota">Vikan mín</a>
+      <a href="#framfarir">Framfarir</a>
+      <a href="#aminning">Áminning</a>
       <a href="skilabod.html">Skilaboð <span class="badge">1</span></a>
     </nav>
     <div class="sidebar-foot">Kennari: [Nafn kennara]<br><a href="index.html" style="color:#B7C4C1">Útskrá</a></div>
@@ -38,6 +39,20 @@
       </button>
     </div>
 
+    <section class="tonight" id="kvold">
+      <div class="tonight-main">
+        <span class="tonight-eyebrow">ÆFING KVÖLDSINS</span>
+        <h2>Hvað hefurðu mikinn tíma í kvöld?</h2>
+        <p id="tonight-sub">Við setjum saman æfingu úr vikunni þinni. Þú fylgir bara skrefunum, með tímamæli og taktmæli.</p>
+        <div class="time-picks">
+          <button class="time-pick" data-min="10"><strong>10</strong><span>mín</span><small>Stutt og gott</small></button>
+          <button class="time-pick" data-min="20"><strong>20</strong><span>mín</span><small>Venjuleg æfing</small></button>
+          <button class="time-pick" data-min="30"><strong>30</strong><span>mín</span><small>Góð æfing</small></button>
+        </div>
+      </div>
+      <div class="tonight-goal" id="tonight-goal"></div>
+    </section>
+
     <section class="panel" id="vikur">
       <div class="panel-head"><h2>Vikurnar þínar</h2><span class="muted" style="font-size:14px" id="access"></span></div>
       <div class="weeks" id="weeks" role="list"></div>
@@ -46,12 +61,31 @@
 
     <div class="grid-2">
       <section class="panel flush" id="lota">
-        <div class="video-frame" style="aspect-ratio:16/9">
-          <span class="label" id="v-label">[Kennslumyndband]</span>
+        <div class="video-frame lesson-video" id="v-frame" style="aspect-ratio:16/9">
+          <video id="lesson-video" src="media/demo-lota.mp4" playsinline preload="metadata"></video>
+          <span class="label" id="v-label">Kennslumyndband</span>
           <span class="video-lock" id="v-lock" hidden></span>
           <button class="play" id="v-play" aria-label="Spila myndband" style="width:64px;height:64px">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="#0F1A1C" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
           </button>
+        </div>
+        <div class="video-tools" id="v-tools">
+          <div class="vt-row">
+            <button class="vt-btn" id="vt-toggle" aria-label="Spila eða stöðva">▶</button>
+            <span class="vt-time" id="vt-time">0:00</span>
+            <div class="vt-group" role="group" aria-label="Hraði">
+              <button class="vt-btn" data-speed="0.5">50%</button>
+              <button class="vt-btn" data-speed="0.75">75%</button>
+              <button class="vt-btn on" data-speed="1">100%</button>
+            </div>
+            <div class="vt-group" role="group" aria-label="Endurtaka bút">
+              <button class="vt-btn" id="vt-a" title="Merkja upphaf bútsins">A</button>
+              <button class="vt-btn" id="vt-b" title="Merkja lok bútsins">B</button>
+              <button class="vt-btn" id="vt-loop" aria-pressed="false">Endurtaka bút</button>
+            </div>
+          </div>
+          <p class="vt-hint" id="vt-hint">Hægðu á myndbandinu eða endurtaktu erfiðan bút: ýttu á A við upphaf, B við lok og svo „Endurtaka bút“.</p>
+          <ol class="chapters" id="chapters" aria-label="Kaflar"></ol>
         </div>
         <div class="panel-body">
           <div class="eyebrow" id="l-eyebrow"></div>
@@ -73,12 +107,41 @@
         </section>
 
         <section class="panel" id="dagbok">
-          <div class="panel-head"><h2>Æfingadagbók</h2><span class="muted" style="font-size:14px">Þessi vika</span></div>
-          <div class="week" id="week"></div>
-          <button class="link-btn" id="log-today">+ Skrá æfingu í dag</button>
+          <div class="panel-head"><h2>Vikan þín</h2>
+            <label class="goal-select">Markmið
+              <select id="goal"><option value="2">2 kvöld</option><option value="3">3 kvöld</option><option value="4">4 kvöld</option><option value="5">5 kvöld</option></select>
+            </label>
+          </div>
+          <div class="minute-bars" id="minute-bars"></div>
+          <p class="week-sum" id="week-sum"></p>
+          <button class="link-btn" id="log-manual">+ Ég æfði án síðunnar í dag (15 mín)</button>
+        </section>
+
+        <section class="panel" id="taktmaelir">
+          <div class="panel-head"><h2>Taktmælir</h2><span class="muted" style="font-size:14px">Alltaf við höndina</span></div>
+          <div class="metro" data-metro></div>
         </section>
       </div>
     </div>
+
+    <section class="panel" id="framfarir">
+      <div class="panel-head"><h2>Framfarirnar þínar</h2><span class="muted" style="font-size:14px">Frá því þú byrjaðir</span></div>
+      <div class="stats-row" id="stats-row"></div>
+      <h3 class="ba-title">Fyrir og eftir</h3>
+      <p class="muted" style="font-size:15px">Berðu saman fyrstu upptökuna þína og þá nýjustu. Þú heyrir muninn betur en þú heldur.</p>
+      <div class="before-after" id="before-after"></div>
+    </section>
+
+    <section class="panel" id="aminning">
+      <div class="panel-head"><h2>Áminning</h2><span class="muted" style="font-size:14px">Fastur tími hjálpar</span></div>
+      <p class="muted" style="font-size:15px">Veldu kvöldin og tímann sem henta þér. Áminningin fer í dagatalið í símanum þínum, með hlekk beint á æfingu kvöldsins.</p>
+      <div class="remind-days" id="remind-days" role="group" aria-label="Dagar"></div>
+      <div class="remind-row">
+        <label class="remind-time">Klukkan <input type="time" id="remind-time" value="20:30"></label>
+        <button class="btn btn-primary btn-sm" id="remind-add">Bæta í dagatalið mitt</button>
+      </div>
+      <p class="muted" style="font-size:13px">Virkar með dagatalinu í iPhone, Google og Outlook.</p>
+    </section>
 
     <section class="panel" id="endurgjof">
       <div class="panel-head"><h2>Nýjasta endurgjöf</h2><a href="skilabod.html" style="font-size:15px;font-weight:600">Opna samtal</a></div>
@@ -105,8 +168,27 @@
     <label>Hvaða lota?
       <select id="upload-week"></select>
     </label>
-    <label>Upptaka (myndband eða hljóð)
-      <input type="file" accept="video/*,audio/*" capture="user">
+    <div class="tabs" role="tablist" aria-label="Hvernig viltu senda?">
+      <button type="button" role="tab" class="tab" aria-selected="true" data-utab="rec">Taka upp núna</button>
+      <button type="button" role="tab" class="tab" aria-selected="false" data-utab="file">Velja skrá</button>
+    </div>
+    <div class="recorder" id="recorder">
+      <div class="rec-screen">
+        <video id="rec-live" playsinline muted></video>
+        <video id="rec-play" playsinline controls hidden></video>
+        <div class="rec-empty" id="rec-empty">Myndavélin og hljóðneminn opnast þegar þú ýtir á „Byrja“.</div>
+        <span class="rec-dot" id="rec-dot" hidden>● <span id="rec-time">0:00</span></span>
+      </div>
+      <div class="rec-controls">
+        <button type="button" class="btn btn-primary btn-sm" id="rec-start">● Byrja upptöku</button>
+        <button type="button" class="btn btn-outline btn-sm" id="rec-stop" hidden>■ Stöðva</button>
+        <button type="button" class="btn btn-outline btn-sm" id="rec-again" hidden>Taka aftur</button>
+        <label class="check" style="font-size:14px;margin-left:auto"><input type="checkbox" id="rec-audio"><span>Bara hljóð</span></label>
+      </div>
+      <p class="rec-msg" id="rec-msg" hidden></p>
+    </div>
+    <label id="file-pick" hidden>Upptaka (myndband eða hljóð)
+      <input type="file" id="rec-file" accept="video/*,audio/*">
     </label>
     <label>Skilaboð til kennara (valfrjálst)
       <textarea rows="3" placeholder="T.d. hvað gekk vel eða hvar þú festist…"></textarea>
@@ -239,7 +321,7 @@
     document.getElementById('l-eyebrow').textContent = `VIKA ${selected + 1} AF ${WEEKS.length}${st === 'done' ? ' · TIL UPPRIFJUNAR' : ''}${w.song ? ' · LAGAVAL' : ''}`;
     document.getElementById('l-title').textContent = c && !browsing ? c.title : w.title;
     document.getElementById('l-desc').textContent = c && !browsing ? `${c.origin}. Kennslumyndband ${c.len}. Æfðu lagið alla vikuna og sendu lokaupptöku í lokin.` : w.desc;
-    document.getElementById('v-label').textContent = c ? `[Kennslumyndband: ${c.title}]` : w.song ? '[Veldu lag til að sjá myndbandið]' : '[Kennslumyndband]';
+    document.getElementById('v-label').textContent = c ? `Kennslumyndband: ${c.title}` : w.song ? 'Veldu lag til að sjá myndbandið' : `Kennslumyndband · Vika ${selected + 1}`;
     const locked = st === 'locked';
     const vlock = document.getElementById('v-lock');
     vlock.hidden = !locked;
@@ -323,32 +405,7 @@
 
   renderWeeks(); renderLesson();
 
-  // Æfingadagbók
-  const names = ['Mán', 'Þri', 'Mið', 'Fim', 'Fös', 'Lau', 'Sun'];
-  const todayIdx = (new Date().getDay() + 6) % 7; // mánudagur = 0
-  let days = store.get('tsn-week', [true, true, false, true, false, false, false]);
-  function renderWeek() {
-    document.getElementById('week').innerHTML = names.map((n, i) =>
-      `<div class="day${days[i] ? ' done' : ''}${i === todayIdx ? ' today' : ''}"><span></span>${n}</div>`
-    ).join('');
-    const btn = document.getElementById('log-today');
-    btn.textContent = days[todayIdx] ? '✓ Æfing skráð í dag' : '+ Skrá æfingu í dag';
-  }
-  document.getElementById('log-today').addEventListener('click', () => {
-    days[todayIdx] = !days[todayIdx];
-    store.set('tsn-week', days);
-    renderWeek();
-    if (days[todayIdx]) toast('Vel gert! Æfingin er skráð.');
-  });
-  renderWeek();
-
-  // Senda upptöku
-  const dlg = document.getElementById('upload');
-  document.getElementById('open-upload').addEventListener('click', () => dlg.showModal());
-  dlg.addEventListener('close', () => {
-    if (dlg.returnValue === 'send') toast('Upptakan er send til kennarans.');
-    document.getElementById('upload-form').reset();
-  });
 </script>
+<script src="aefing.js"></script>
 </body>
 </html>

@@ -441,3 +441,142 @@ dialog::backdrop { background: rgba(15,26,28,.5); }
 .video-frame.yt::before { content: ""; position: absolute; inset: 0; background: rgba(15,26,28,.25); }
 .video-frame.yt .play { position: relative; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
 .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* ================= Æfing kvöldsins ================= */
+.tonight { background: var(--ink); color: #fff; border-radius: 22px; padding: 32px; display: flex; flex-wrap: wrap; gap: 32px; align-items: center; justify-content: space-between; }
+.tonight-main { flex: 1 1 420px; display: flex; flex-direction: column; gap: 12px; }
+.tonight-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .08em; color: var(--mint); }
+.tonight h2 { font-size: clamp(26px, 3vw, 34px); font-weight: 800; }
+.tonight p { color: var(--on-dark); font-size: 16px; max-width: 560px; }
+.time-picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 8px; max-width: 560px; }
+.time-pick { font: inherit; color: var(--ink); background: #fff; border: 0; border-radius: 16px; padding: 16px 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0; transition: transform .12s, background .12s; }
+.time-pick:hover { background: var(--mint); transform: translateY(-2px); }
+.time-pick strong { font: 800 36px/1 var(--display); }
+.time-pick span { font-size: 14px; font-weight: 600; }
+.time-pick small { margin-top: 6px; font-size: 13px; color: var(--muted); }
+.tonight-goal { display: flex; align-items: center; gap: 16px; }
+.ring { width: 120px; height: 120px; }
+.ring-bg { fill: none; stroke: #2A3B3F; stroke-width: 9; }
+.ring-fg { fill: none; stroke: var(--mint); stroke-width: 9; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset .6s; }
+.ring-num { font: 800 22px var(--display); fill: #fff; text-anchor: middle; }
+.ring-lbl { font: 600 11px var(--body); fill: var(--on-dark); text-anchor: middle; }
+.goal-text { font-size: 15px; color: var(--on-dark); line-height: 1.5; }
+.goal-text strong { color: #fff; font: 700 20px var(--display); }
+@media (max-width: 520px) { .tonight { padding: 24px 18px; } .time-pick strong { font-size: 28px; } }
+
+/* ================= Taktmælir ================= */
+.metro { display: flex; flex-direction: column; gap: 12px; }
+.m-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.m-step { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line); background: #fff; font: 600 22px/1 var(--body); color: var(--ink); cursor: pointer; }
+.m-read { text-align: center; }
+.m-bpm { display: block; font: 800 40px/1 var(--display); }
+.m-read small { font-size: 13px; color: var(--muted); }
+.m-slider { width: 100%; accent-color: var(--accent); }
+.m-dots { display: flex; gap: 10px; justify-content: center; }
+.m-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--line); transition: background .05s, transform .05s; }
+.m-dot:first-child { width: 16px; height: 16px; }
+.m-dot.lit { background: var(--amber); transform: scale(1.25); }
+.metro .m-toggle { align-self: stretch; }
+.metro.dark .m-step { background: transparent; color: #fff; border-color: #3A4A4D; }
+.metro.dark .m-read small { color: var(--on-dark); }
+.metro.dark .m-dot { background: #3A4A4D; }
+
+/* ================= Vikan þín ================= */
+.goal-select { font-size: 14px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.goal-select select { font: inherit; color: var(--ink); padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.minute-bars { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; height: 140px; align-items: end; }
+.mb { display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; }
+.mb-val { font-size: 12px; font-weight: 600; color: var(--accent); min-height: 16px; }
+.mb-bar { flex: 1; width: 100%; max-width: 34px; background: var(--soft); border-radius: 8px; display: flex; align-items: flex-end; overflow: hidden; }
+.mb-bar i { display: block; width: 100%; background: var(--accent); border-radius: 8px; min-height: 0; transition: height .4s; }
+.mb-day { font-size: 13px; color: var(--muted); }
+.mb.today .mb-day { color: var(--ink); font-weight: 700; }
+.mb.today .mb-bar { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mb.future .mb-bar { background: transparent; border: 1.5px dashed var(--line); }
+.week-sum { font-size: 15px; color: var(--ink-2); }
+
+/* ================= Myndbandsverkfæri ================= */
+.lesson-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #1C2B2E; cursor: pointer; }
+.lesson-video .label { z-index: 2; background: rgba(15,26,28,.7); padding: 4px 10px; border-radius: 999px; color: #fff; }
+.lesson-video .play { position: relative; z-index: 2; }
+.lesson-video .play.gone { display: none; }
+.lesson-video .video-lock { z-index: 3; }
+.lesson-video.veil video { filter: blur(14px) brightness(.5); pointer-events: none; }
+.lesson-video.veil .play { display: none; }
+.video-tools { padding: 14px 24px 4px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--line); }
+.vt-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.vt-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.vt-btn { font: 600 13px var(--body); padding: 8px 11px; min-height: 36px; border-radius: 8px; border: 1px solid var(--line); background: #fff; color: var(--ink); cursor: pointer; }
+.vt-btn.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+#vt-toggle { width: 40px; }
+.vt-time { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 84px; }
+.vt-hint { font-size: 13px; color: var(--muted); }
+.chapters { list-style: none; margin: 0 0 10px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px; }
+.chapters button { width: 100%; text-align: left; font: 500 14px var(--body); color: var(--ink); background: var(--soft); border: 0; border-radius: 8px; padding: 8px 10px; cursor: pointer; display: flex; gap: 8px; }
+.chapters button span { color: var(--muted); font-variant-numeric: tabular-nums; }
+.chapters li.cur button { background: var(--accent-soft); color: var(--accent-hover); font-weight: 600; }
+
+/* ================= Upptaka ================= */
+.recorder { display: flex; flex-direction: column; gap: 10px; }
+.rec-screen { position: relative; aspect-ratio: 16 / 10; background: var(--ink); border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.rec-screen video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#rec-live { transform: scaleX(-1); }
+.rec-empty { color: var(--on-dark); font-size: 14px; padding: 20px; text-align: center; position: relative; }
+.rec-dot { position: absolute; top: 10px; left: 10px; background: #B42318; color: #fff; font: 700 13px var(--body); padding: 4px 10px; border-radius: 999px; }
+.rec-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.rec-msg { font-size: 14px; color: #9B2C1F; background: #FBEAE7; padding: 10px 12px; border-radius: 10px; }
+
+/* ================= Framfarir ================= */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+.stats-row .stat strong { font-size: 30px; display: block; }
+.ba-title { font-size: 18px; margin-top: 8px; }
+.before-after { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.ba-card { display: flex; flex-direction: column; gap: 8px; }
+.ba-card video, .ba-card audio { width: 100%; border-radius: 12px; background: var(--ink); }
+.ba-card video { aspect-ratio: 16 / 10; object-fit: cover; }
+.ba-card small { font-size: 13px; color: var(--muted); }
+.ba-tag { font-size: 13px; font-weight: 700; color: var(--accent); }
+.ba-ph { aspect-ratio: 16 / 10; border: 1.5px dashed var(--line); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 16px; font-size: 14px; color: var(--muted); }
+
+/* ================= Áminning ================= */
+.remind-days { display: flex; flex-wrap: wrap; gap: 6px; }
+.day-chip { font: 600 14px var(--body); min-width: 48px; height: 44px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--line); background: #fff; color: var(--ink); cursor: pointer; }
+.day-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.remind-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.remind-time { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.remind-time input { font: inherit; padding: 8px 10px; border: 1px solid #C3CCCA; border-radius: 10px; }
+
+/* ================= Æfingahamur ================= */
+dialog.practice { width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; border-radius: 0; background: var(--ink); color: #fff; padding: 0; }
+dialog.practice::backdrop { background: var(--ink); }
+.pr-wrap { min-height: 100%; display: flex; flex-direction: column; max-width: 1100px; margin: 0 auto; padding: 20px 24px 32px; box-sizing: border-box; }
+.pr-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.pr-eyebrow { font-size: 14px; font-weight: 600; color: var(--mint); }
+.pr-dots { display: flex; gap: 6px; margin-top: 10px; }
+.pr-dots i { width: 28px; height: 6px; border-radius: 3px; background: #2A3B3F; }
+.pr-dots i.done { background: var(--mint); }
+.pr-dots i.cur { background: #fff; }
+.pr-close { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #3A4A4D; background: transparent; color: #fff; font-size: 18px; cursor: pointer; }
+.pr-body { flex: 1; display: flex; flex-wrap: wrap; gap: 32px; align-items: center; justify-content: center; padding-top: 24px; }
+.pr-step { flex: 1 1 380px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; max-width: 520px; }
+.pr-step h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+.pr-step p { color: var(--on-dark); font-size: 17px; }
+.pr-timer { position: relative; width: min(260px, 60vw); aspect-ratio: 1; margin: 8px 0; }
+.pr-timer svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.pr-ring-bg { fill: none; stroke: #2A3B3F; stroke-width: 8; }
+.pr-ring-fg { fill: none; stroke: var(--mint); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset .25s linear; }
+.pr-clock { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 800 clamp(44px, 9vw, 64px)/1 var(--display); font-variant-numeric: tabular-nums; }
+.pr-controls { display: flex; gap: 16px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.pr-btn { width: 56px; height: 56px; border-radius: 50%; border: 1px solid #3A4A4D; background: transparent; color: #fff; font-size: 18px; cursor: pointer; }
+.pr-btn.big { width: 76px; height: 76px; background: #fff; color: var(--ink); border: 0; font-size: 22px; }
+.pr-btn:disabled { opacity: .3; cursor: default; }
+.pr-side { flex: 0 1 340px; display: flex; flex-direction: column; gap: 16px; }
+.pr-side:empty { display: none; }
+.pr-card { background: var(--dark-2); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.pr-card h3 { font-size: 18px; }
+.pr-card .muted { color: var(--on-dark); font-size: 14px; }
+.pr-card video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 10px; background: #000; }
+.pr-card .btn-outline { background: transparent; color: #fff; border-color: #fff; }
+.pr-done .pr-badge { width: 88px; height: 88px; border-radius: 50%; background: var(--mint); color: var(--ink); font: 800 42px/88px var(--display); }
+.pr-done .btn-outline { background: transparent; color: #fff; border-color: #fff; }
+.lesson-video .label { top: auto; bottom: 12px; }
