@@ -580,3 +580,9 @@ dialog.practice::backdrop { background: var(--ink); }
 .pr-done .pr-badge { width: 88px; height: 88px; border-radius: 50%; background: var(--mint); color: var(--ink); font: 800 42px/88px var(--display); }
 .pr-done .btn-outline { background: transparent; color: #fff; border-color: #fff; }
 .lesson-video .label { top: auto; bottom: 12px; }
+
+/* Innskráning í símavalmynd */
+.main-nav .nav-login { display: none; }
+@media (max-width: 860px) {
+  .main-nav .nav-login { display: block; font-weight: 700; color: var(--accent); }
+}
